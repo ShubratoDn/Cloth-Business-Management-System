@@ -1,0 +1,159 @@
+package com.cloth.business.controllers;
+
+
+import com.cloth.business.DTO.UserDTO;
+import com.cloth.business.configurations.jwt.JwtTokenUtil;
+import com.cloth.business.configurations.security.CustomUserDetailsServiceImpl;
+import com.cloth.business.entities.UserRole;
+import com.cloth.business.payloads.ErrorResponse;
+import com.cloth.business.payloads.LoginRequest;
+import com.cloth.business.payloads.LoginResponse;
+import com.cloth.business.services.UserService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@RequestMapping("/api/v1/auth")
+@RestController
+@Slf4j
+public class AuthController {
+    @Autowired
+    private ModelMapper mapper;
+
+    @Autowired
+    private UserService userServices;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CustomUserDetailsServiceImpl customUserDetailsServiceImpl;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO){
+
+
+        if(userServices.findByPhone(userDTO.getPhone()) != null){
+            ErrorResponse errorResponse = new ErrorResponse(
+                    LocalDateTime.now(),
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Bad Request",
+                    "Phone number already exists."
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+
+
+        if(userDTO.getEmail() != null || !userDTO.getEmail().isBlank()){
+            if(userServices.findByEmail(userDTO.getEmail()) != null){
+                ErrorResponse errorResponse = new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Bad Request",
+                        "Email already exists."
+                );
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+        }
+
+
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        userDTO.setIsLocked(false);
+
+
+//        return ResponseEntity.ok(userDTO);
+        // Save the user
+        UserDTO savedUser = userServices.addUser(userDTO);
+
+        log.info("New user registered successfully: Id ->{}; Name -> {}", savedUser.getId(), savedUser.getName());
+
+        return ResponseEntity.ok(savedUser);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    LocalDateTime.now(),
+                    HttpStatus.BAD_REQUEST.value(),
+                    "User Account Disabled",
+                    "User account is disabled."
+            );
+            log.error("Login failed for user '{}': User account is disabled.", username);
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (BadCredentialsException e) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    LocalDateTime.now(),
+                    HttpStatus.UNAUTHORIZED.value(),
+                    "Bad Credentials",
+                    "Incorrect username or password."
+            );
+            log.error("Login failed for user '{}': Incorrect username or password.", username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        } catch (InternalAuthenticationServiceException e) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    LocalDateTime.now(),
+                    HttpStatus.BAD_REQUEST.value(),
+                    "User Not Found",
+                    "User not found."
+            );
+            log.error("Login failed for user '{}': User not found.", username);
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+
+        UserDetails userDetails = customUserDetailsServiceImpl.loadUserByUsername(username);
+        String token = jwtTokenUtil.generateToken(userDetails);
+
+        UserDTO user = userServices.findByPhoneOrEmail(username, username);
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setUser(user);
+
+
+
+        log.info("User '{}' has successfully logged in.", username);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+}
