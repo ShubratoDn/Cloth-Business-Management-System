@@ -1,5 +1,8 @@
 package com.cloth.business.controllers;
 
+import com.cloth.business.configurations.annotations.CheckRoles;
+import com.cloth.business.configurations.security.CustomSecurityExpression;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/products")
 @RestController
 public class ProductController {
+
+	@Autowired
+	private CustomSecurityExpression customSecurityExpression;
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/all")
@@ -35,14 +41,16 @@ public class ProductController {
 	}
 	
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_UPDATE')")
+//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_UPDATE')")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_PRODUCT_UPDATE"})
 	@PutMapping("/")
 	public ResponseEntity<?> updateProduct(){
 		return ResponseEntity.ok("Product Updated!");
 	}
 	
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_DELETE')")
+//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_DELETE')")
+	@PreAuthorize("@customSecurityExpression.hasPermission('ROLE_PRODUCT_DELETE')")
 	@DeleteMapping("/")
 	public ResponseEntity<?> deleteProduct(){
 		return ResponseEntity.ok("Product Deleted!");
