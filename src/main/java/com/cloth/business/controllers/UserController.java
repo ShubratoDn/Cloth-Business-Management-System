@@ -4,6 +4,8 @@ import com.cloth.business.DTO.UserDTO;
 import com.cloth.business.payloads.ErrorResponse;
 import com.cloth.business.services.UserService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("api/v1/users/")
+@Slf4j
 public class UserController {
 
 
@@ -59,7 +62,7 @@ public class UserController {
 
 //        return ResponseEntity.ok(userDTO);
         // Save the user
-        UserDTO savedUser = userServices.addUser(userDTO);
+        UserDTO savedUser = userService.addUser(userDTO);
 
         log.info("New user registered successfully: Id ->{}; Name -> {}", savedUser.getId(), savedUser.getName());
 
