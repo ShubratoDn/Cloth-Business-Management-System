@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/login").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll() //all URL starts with "/auth" can be accessed without token
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.GET).permitAll() //All the GET URL will authenticated (They will not need  Token to access)
+//                        .requestMatchers(HttpMethod.GET).permitAll() //All the GET URL will authenticated (They will not need  Token to access)
                         .anyRequest().authenticated()) // Require authentication for other endpoints
 
                 .exceptionHandling( exceptions -> exceptions.authenticationEntryPoint(authenticationEntryPoint))

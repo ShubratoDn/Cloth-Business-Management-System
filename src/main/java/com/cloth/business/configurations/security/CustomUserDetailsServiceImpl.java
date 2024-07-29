@@ -2,7 +2,6 @@ package com.cloth.business.configurations.security;
 
 import com.cloth.business.entities.User;
 import com.cloth.business.repositories.UserRepository;
-import com.cloth.business.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

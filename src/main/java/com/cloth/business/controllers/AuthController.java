@@ -4,14 +4,12 @@ package com.cloth.business.controllers;
 import com.cloth.business.DTO.UserDTO;
 import com.cloth.business.configurations.jwt.JwtTokenUtil;
 import com.cloth.business.configurations.security.CustomUserDetailsServiceImpl;
-import com.cloth.business.entities.UserRole;
 import com.cloth.business.payloads.ErrorResponse;
 import com.cloth.business.payloads.LoginRequest;
 import com.cloth.business.payloads.LoginResponse;
 import com.cloth.business.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +22,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
+
 
 @RequestMapping("/api/v1/auth")
 @RestController
 @Slf4j
 public class AuthController {
-    @Autowired
-    private ModelMapper mapper;
+    
 
     @Autowired
     private UserService userServices;
@@ -80,6 +78,8 @@ public class AuthController {
 
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userDTO.setIsLocked(false);
+        userDTO.setCreatedAt(new Date());
+        userDTO.setUpdatedAt(null);
 
 
 //        return ResponseEntity.ok(userDTO);

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImple implements UserService {
@@ -81,6 +80,35 @@ public class UserServiceImple implements UserService {
 
         return null;
     }
+    
+    @Override
+    public UserDTO updateUser(UserDTO userDTO) {
+        List<UserRole> roles = new ArrayList<>();
+        for(UserRole userRole : userDTO.getRoles()) {
+            roles.add(userRoleService.getRoleById(userRole.getId()));
+        }
+
+        userDTO.setRoles(roles);
+
+        User user = modelMapper.map(userDTO, User.class);
+        User save = userRepository.save(user);
+        if(save != null) {
+            return modelMapper.map(save, UserDTO.class);
+        }
+
+        return null;
+    }
+    
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> all = userRepository.findAll();
+        List<UserDTO> users = new ArrayList<>();
+        for (User u : all) {
+            users.add(modelMapper.map(u, UserDTO.class));
+        }
+        return users;
+    }
+
 
 
 }

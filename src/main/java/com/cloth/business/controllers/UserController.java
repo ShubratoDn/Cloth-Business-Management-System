@@ -1,6 +1,8 @@
 package com.cloth.business.controllers;
 
 import com.cloth.business.DTO.UserDTO;
+import com.cloth.business.configurations.security.CustomUserDetails;
+import com.cloth.business.entities.User;
 import com.cloth.business.payloads.ErrorResponse;
 import com.cloth.business.services.UserService;
 import jakarta.validation.Valid;
@@ -9,9 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @RestController
 @RequestMapping("api/v1/users/")
@@ -22,6 +27,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    
+    @GetMapping("/me")
+    public ResponseEntity<?> myInfo(){
+    	CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	User loggedInUser = customUserDetails.getLoggedInUser();
+    	return ResponseEntity.ok(loggedInUser);
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUser(){
+    	return ResponseEntity.ok(userService.getAllUsers());
+    }
+    
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserByiD(@PathVariable Long userId){
+    	return ResponseEntity.ok(userService.findById(userId));
+    }
 
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long userId){
@@ -56,13 +78,21 @@ public class UserController {
         }
 
 
-//        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userDTO.setIsLocked(false);
+        
+        
+        dbUser.setUpdatedAt(new Date());
+        dbUser.setName(userDTO.getName());
+        dbUser.setDesignation(userDTO.getDesignation());
+        dbUser.setPhone(userDTO.getPhone());
+        dbUser.setEmail(userDTO.getEmail());
+        dbUser.setAddress(userDTO.getAddress());
+        dbUser.setRemark(userDTO.getRemark());
+        dbUser.setRoles(userDTO.getRoles());
+        
 
 
-//        return ResponseEntity.ok(userDTO);
         // Save the user
-        UserDTO savedUser = userService.addUser(userDTO);
+        UserDTO savedUser = userService.updateUser(dbUser);
 
         log.info("New user registered successfully: Id ->{}; Name -> {}", savedUser.getId(), savedUser.getName());
 

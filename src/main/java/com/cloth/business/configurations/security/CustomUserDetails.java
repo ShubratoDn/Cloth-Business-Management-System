@@ -23,6 +23,10 @@ public class CustomUserDetails implements UserDetails {
 		this.user = user;
 	}
 	
+	public User getLoggedInUser() {
+		return this.user;
+	}
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<UserRole> roles = user.getRoles();
