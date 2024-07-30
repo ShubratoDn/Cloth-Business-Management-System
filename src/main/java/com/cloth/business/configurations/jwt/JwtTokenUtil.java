@@ -20,7 +20,7 @@ public class JwtTokenUtil {
     private String SECRET_KEY = "THIS_IS_A_SECRET_KEY";
 
 //    @Value("${jwt.expiration-time}")
-    private long EXPIRATION_TIME = 1 * 60 * 60 * 1000; // 1 hour Expiration time in milliseconds
+    private long EXPIRATION_TIME = 100 * 60 * 60 * 1000; // 100 hour Expiration time in milliseconds
 	
 
     public String extractUsername(String token) {

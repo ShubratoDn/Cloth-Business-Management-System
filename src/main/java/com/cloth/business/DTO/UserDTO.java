@@ -3,18 +3,23 @@ package com.cloth.business.DTO;
 import com.cloth.business.entities.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class UserDTO {
-    private Long id;
+public class UserDTO implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
 
     @NotBlank(message= "Name can not be empty")
     @Size(min = 3, message = "Name should contain minimum 3 characters")

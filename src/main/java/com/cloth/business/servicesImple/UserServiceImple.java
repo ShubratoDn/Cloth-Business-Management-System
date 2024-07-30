@@ -27,7 +27,7 @@ public class UserServiceImple implements UserService {
     private ModelMapper modelMapper;
 
     @Override
-    public UserDTO findByPhoneOrEmail(String phone, String email) {
+    public UserDTO findByPhoneOrEmail(String phone, String email) {    	
         User user = userRepository.findByPhoneOrEmail(phone, email);
         if(user != null){
             return modelMapper.map(user, UserDTO.class);
@@ -53,9 +53,8 @@ public class UserServiceImple implements UserService {
         return null;
     }
 
-
     @Override
-    public UserDTO findById(Long id) {
+    public UserDTO findById(Long id) {  
         User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User", id+""));
         if(user != null){
             return modelMapper.map(user, UserDTO.class);
