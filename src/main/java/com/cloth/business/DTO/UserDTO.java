@@ -1,5 +1,6 @@
 package com.cloth.business.DTO;
 
+import com.cloth.business.entities.Store;
 import com.cloth.business.entities.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,9 +38,11 @@ public class UserDTO implements Serializable {
     private Boolean isLocked;
     private Date createdAt;
     private Date updatedAt;
-
+    
     private List<UserRole> roles = new ArrayList<>();
-
+    
+    private List<Store> ownedStore = new ArrayList<>();
+    
     @JsonIgnore
     public String getPassword() {
         return password;

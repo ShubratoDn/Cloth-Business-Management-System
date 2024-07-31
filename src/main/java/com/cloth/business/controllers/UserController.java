@@ -87,7 +87,7 @@ public class UserController {
         dbUser.setAddress(userDTO.getAddress());
         dbUser.setRemark(userDTO.getRemark());
         dbUser.setRoles(userDTO.getRoles());
-        
+        dbUser.setOwnedStore(userDTO.getOwnedStore());
 
 
         // Save the user

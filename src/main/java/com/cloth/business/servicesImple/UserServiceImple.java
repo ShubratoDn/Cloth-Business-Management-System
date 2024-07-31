@@ -1,10 +1,12 @@
 package com.cloth.business.servicesImple;
 
 import com.cloth.business.DTO.UserDTO;
+import com.cloth.business.entities.Store;
 import com.cloth.business.entities.User;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.repositories.UserRepository;
+import com.cloth.business.services.StoreService;
 import com.cloth.business.services.UserRoleService;
 import com.cloth.business.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,9 @@ public class UserServiceImple implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+    
+    @Autowired
+    private StoreService storeService;
 
     @Override
     public UserDTO findByPhoneOrEmail(String phone, String email) {    	
@@ -87,8 +92,17 @@ public class UserServiceImple implements UserService {
             roles.add(userRoleService.getRoleById(userRole.getId()));
         }
 
-        userDTO.setRoles(roles);
+        
+        List<Store> stores = new ArrayList<>();
+        for(Store store : userDTO.getOwnedStore()) {
+            stores.add(storeService.getStoreById(store.getId()));
+        }
 
+        
+        
+        userDTO.setRoles(roles);
+        userDTO.setOwnedStore(stores);
+        
         User user = modelMapper.map(userDTO, User.class);
         User save = userRepository.save(user);
         if(save != null) {

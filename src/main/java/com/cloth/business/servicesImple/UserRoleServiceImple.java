@@ -43,7 +43,8 @@ public class UserRoleServiceImple implements UserRoleService {
         role.setRole(userRole.getRole());
         role.setCategory(userRole.getCategory());
         role.setTitle(userRole.getTitle());
-
+        role.setIsActive(userRole.getIsActive());
+        
         UserRole save = userRoleRepository.save(role);
         return save;
     }
