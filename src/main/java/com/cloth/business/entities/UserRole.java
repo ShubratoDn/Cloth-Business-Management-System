@@ -23,10 +23,12 @@ public class UserRole implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Role id must not be Blank")
+    @NotBlank(message = "Role name is required")
     private String role;
 
     private String title;
 
     private String category;
+    
+    private Boolean isActive;
 }
