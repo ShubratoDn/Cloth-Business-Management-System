@@ -1,6 +1,7 @@
 package com.cloth.business.configurations.security;
 
 import com.cloth.business.entities.User;
+import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +27,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
 		User user = userRepository.findByPhoneOrEmail(username, username);
 		if(user == null) {
-			throw new UsernameNotFoundException("User name not found");
+			throw new ResourceNotFoundException("User name not found");
 		}
 		
 		CustomUserDetails customUserDetails = new CustomUserDetails(user);		

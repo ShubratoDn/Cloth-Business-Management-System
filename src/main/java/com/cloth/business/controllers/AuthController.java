@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RequestMapping("/api/v1/auth")
@@ -50,28 +53,18 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserDTO userDTO){
-
+        Map<String, String> response = new HashMap<>();
 
         if(userServices.findByPhone(userDTO.getPhone()) != null){
-            ErrorResponse errorResponse = new ErrorResponse(
-                    LocalDateTime.now(),
-                    HttpStatus.BAD_REQUEST.value(),
-                    "Bad Request",
-                    "Phone number already exists."
-            );
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            response.put("phone","Phone number already exists.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
 
         if(userDTO.getEmail() != null || !userDTO.getEmail().isBlank()){
             if(userServices.findByEmail(userDTO.getEmail()) != null){
-                ErrorResponse errorResponse = new ErrorResponse(
-                        LocalDateTime.now(),
-                        HttpStatus.BAD_REQUEST.value(),
-                        "Bad Request",
-                        "Email already exists."
-                );
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+                response.put("email", "Email already exists.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         }
 
@@ -84,8 +77,8 @@ public class AuthController {
 
 //        return ResponseEntity.ok(userDTO);
         // Save the user
-        UserDTO savedUser = userServices.addUser(userDTO);
-
+//        UserDTO savedUser = userServices.addUser(userDTO);
+        UserDTO savedUser = userDTO;
         log.info("New user registered successfully: Id ->{}; Name -> {}", savedUser.getId(), savedUser.getName());
 
         return ResponseEntity.ok(savedUser);
@@ -126,7 +119,8 @@ public class AuthController {
                     LocalDateTime.now(),
                     HttpStatus.UNAUTHORIZED.value(),
                     "Bad Credentials",
-                    "Incorrect username or password."
+//                    "Incorrect username or password."
+                    "Incorrect password."
             );
             log.error("Login failed for user '{}': Incorrect username or password.", username);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);

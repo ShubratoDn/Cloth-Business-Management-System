@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-	@Cacheable(value = "userRoles", key = "#role")
+//	@Cacheable(value = "userRoles", key = "#role")
     UserRole findByRole(String role);
 
 }
