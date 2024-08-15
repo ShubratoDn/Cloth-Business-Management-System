@@ -5,6 +5,7 @@ import com.cloth.business.entities.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -12,6 +13,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class UserDTO implements Serializable {
@@ -39,6 +42,11 @@ public class UserDTO implements Serializable {
     private Date createdAt;
     private Date updatedAt;
     
+    @NotNull(message = "Image is required")
+    private MultipartFile userImage;
+    
+    private String image;
+    
     private List<UserRole> roles = new ArrayList<>();
     
     private List<Store> ownedStore = new ArrayList<>();
@@ -51,5 +59,16 @@ public class UserDTO implements Serializable {
     @JsonProperty
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    
+    @JsonIgnore
+    public MultipartFile getUserImage() {
+        return this.userImage;
+    }
+
+    @JsonProperty
+    public void setUserImage(MultipartFile userImage) {
+        this.userImage = userImage;
     }
 }
