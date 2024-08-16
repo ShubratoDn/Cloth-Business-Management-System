@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cloth.business.DTO.StoreDTO;
 import com.cloth.business.entities.Store;
-import com.cloth.business.services.StoreService;
+import com.cloth.business.services.StoreServices;
 
 @RestController
 @RequestMapping("/api/v1/stores")
 public class StoreContoller {
 
 	@Autowired
-	private StoreService storeService;
+	private StoreServices storeService;
 
 	@Autowired
 	private ModelMapper modelMapper;

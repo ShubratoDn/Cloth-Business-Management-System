@@ -4,7 +4,7 @@ package com.cloth.business.servicesImple;
 import com.cloth.business.entities.Store;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.repositories.StoreRepository;
-import com.cloth.business.services.StoreService;
+import com.cloth.business.services.StoreServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StoreServiceImple implements StoreService {
+public class StoreServiceImple implements StoreServices {
 
     @Autowired
     private StoreRepository storeRepository;

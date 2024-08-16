@@ -5,7 +5,7 @@ import java.util.List;
 import com.cloth.business.entities.Store;
 
 
-public interface StoreService {
+public interface StoreServices {
 	public Store addStore(Store store);
 	public Store updateStore(Store store);
 	

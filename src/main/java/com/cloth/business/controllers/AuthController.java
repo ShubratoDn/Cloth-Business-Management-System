@@ -6,7 +6,7 @@ import com.cloth.business.configurations.security.CustomUserDetailsServiceImpl;
 import com.cloth.business.payloads.ErrorResponse;
 import com.cloth.business.payloads.LoginRequest;
 import com.cloth.business.payloads.LoginResponse;
-import com.cloth.business.services.UserService;
+import com.cloth.business.services.UserServices;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import java.util.Map;
 public class AuthController {
 
 	@Autowired
-	private UserService userServices;
+	private UserServices userServices;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -50,13 +50,7 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@Valid @ModelAttribute UserDTO userDTO) {
 		Map<String, String> response = new HashMap<>();
-
-		System.out.println(userDTO.getName());
-		System.out.println(userDTO.getUserImage().getContentType());
-		System.out.println(userDTO.getUserImage().getOriginalFilename());
-		System.out.println(userDTO.getUserImage().getSize());
-
-		
+	
 		if (userServices.findByPhone(userDTO.getPhone()) != null) {
 			response.put("phone", "Phone number already exists.");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -69,17 +63,14 @@ public class AuthController {
 			}
 		}
 
-		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-		userDTO.setIsLocked(false);
+		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));		
 		userDTO.setCreatedAt(new Date());
 		userDTO.setUpdatedAt(null);
 
-//        return ResponseEntity.ok(userDTO);
 		// Save the user
-//        UserDTO savedUser = userServices.addUser(userDTO);		
-//		log.info("New user registered successfully: Id ->{}; Name -> {}", savedUser.getId(), savedUser.getName());
-//		return ResponseEntity.ok(savedUser);
-		return ResponseEntity.ok(userDTO);
+        UserDTO savedUser = userServices.addUser(userDTO);		
+		log.info("New user registered successfully: Id ->{}; Name -> {}", savedUser.getId(), savedUser.getName());
+		return ResponseEntity.ok(savedUser);
 	}
 
 	@PostMapping("/login")

@@ -1,7 +1,7 @@
 package com.cloth.business.controllers;
 
 import com.cloth.business.entities.UserRole;
-import com.cloth.business.services.UserRoleService;
+import com.cloth.business.services.UserRoleServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserRoleController {
 
     @Autowired
-    private UserRoleService userRoleService;
+    private UserRoleServices userRoleService;
 
     @PostMapping("/")
     public ResponseEntity<?> addRole(@Valid @RequestBody UserRole userRole){

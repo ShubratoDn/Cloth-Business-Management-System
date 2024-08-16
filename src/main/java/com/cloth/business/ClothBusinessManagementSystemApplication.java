@@ -17,7 +17,7 @@ import com.cloth.business.configurations.constants.UserRolesList;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceAlreadyExistsException;
 import com.cloth.business.repositories.UserRoleRepository;
-import com.cloth.business.services.UserRoleService;
+import com.cloth.business.services.UserRoleServices;
 
 import io.lettuce.core.models.role.RedisInstance.Role;
 import lombok.extern.slf4j.Slf4j;

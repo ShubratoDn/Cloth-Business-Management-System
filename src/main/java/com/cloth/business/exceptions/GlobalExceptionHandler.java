@@ -372,5 +372,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
+
     
+    
+    
+    @ExceptionHandler(FileUploadingException.class)
+    public ResponseEntity<Map<String, String>> handleFileUploadingException(FileUploadingException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put(ex.getKeyName(), ex.getErrorMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }

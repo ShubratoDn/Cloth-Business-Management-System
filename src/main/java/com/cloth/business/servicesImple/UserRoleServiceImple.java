@@ -7,8 +7,8 @@ import com.cloth.business.exceptions.ResourceAlreadyExistsException;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.repositories.UserRepository;
 import com.cloth.business.repositories.UserRoleRepository;
-import com.cloth.business.services.UserRoleService;
-import com.cloth.business.services.UserService;
+import com.cloth.business.services.UserRoleServices;
+import com.cloth.business.services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserRoleServiceImple implements UserRoleService {
+public class UserRoleServiceImple implements UserRoleServices {
 
     @Autowired
     private UserRoleRepository userRoleRepository;

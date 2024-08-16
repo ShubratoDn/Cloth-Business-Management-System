@@ -9,7 +9,7 @@ public class UserRolesList {
 
 	public static List<UserRole> userRoles = new ArrayList<>();
 	
-
+	//Used to save these role to the database automatically
     static {
         userRoles.add(createRole(null, "ROLE_USER_CREATE", "User Create", "user", true));
         userRoles.add(createRole(null, "ROLE_USER_DELETE", "User Delete", "user", true));

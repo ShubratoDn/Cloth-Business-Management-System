@@ -30,6 +30,7 @@ public class User implements Serializable {
     private String address;
     private String remark;
     private String designation;
+    private String image;
     private Boolean isLocked;
     private Date createdAt;
     private Date updatedAt;

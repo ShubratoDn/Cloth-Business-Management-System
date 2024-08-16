@@ -6,9 +6,10 @@ import com.cloth.business.entities.User;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.repositories.UserRepository;
-import com.cloth.business.services.StoreService;
-import com.cloth.business.services.UserRoleService;
-import com.cloth.business.services.UserService;
+import com.cloth.business.services.FileServices;
+import com.cloth.business.services.StoreServices;
+import com.cloth.business.services.UserRoleServices;
+import com.cloth.business.services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,19 +18,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserServiceImple implements UserService {
+public class UserServiceImple implements UserServices {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private UserRoleService userRoleService;
+    private UserRoleServices userRoleService;
 
     @Autowired
     private ModelMapper modelMapper;
     
     @Autowired
-    private StoreService storeService;
+    private StoreServices storeService;
+    
+    @Autowired
+    private FileServices fileServices;
 
     @Override
     public UserDTO findByPhoneOrEmail(String phone, String email) {    	
@@ -75,13 +79,13 @@ public class UserServiceImple implements UserService {
         }
 
         userDTO.setRoles(roles);
-
+        userDTO.setImage(fileServices.uploadUserImage(userDTO.getUserImage()));
+        
         User user = modelMapper.map(userDTO, User.class);
         User save = userRepository.save(user);
         if(save != null) {
             return modelMapper.map(save, UserDTO.class);
         }
-
         return null;
     }
     

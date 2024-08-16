@@ -4,7 +4,7 @@ import com.cloth.business.DTO.UserDTO;
 import com.cloth.business.configurations.security.CustomUserDetails;
 import com.cloth.business.entities.User;
 import com.cloth.business.payloads.ErrorResponse;
-import com.cloth.business.services.UserService;
+import com.cloth.business.services.UserServices;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +24,7 @@ public class UserController {
 
 
     @Autowired
-    private UserService userService;
+    private UserServices userService;
 
     
     @GetMapping("/me")

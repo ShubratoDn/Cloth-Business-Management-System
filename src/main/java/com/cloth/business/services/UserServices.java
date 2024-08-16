@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.cloth.business.DTO.UserDTO;
 
-public interface UserService {
+public interface UserServices {
     UserDTO findByPhoneOrEmail(String phone, String email);
 
     UserDTO findByPhone(String phone);
