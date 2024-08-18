@@ -98,6 +98,10 @@ public class FileServicesImple implements FileServices {
      */
 	public String uploadFile(MultipartFile file, String fileName, String resourceName, String upload_directory ) {
 		try {
+			
+			File rDir = new File(Constants.RESOURCE_DIRECTORY);
+			rDir.mkdirs();
+			
 			File f = new File(upload_directory);
 			f.mkdirs();
 
@@ -105,13 +109,13 @@ public class FileServicesImple implements FileServices {
 			byte[] data = new byte[inputStream.available()];
 			inputStream.read(data);
 
-			FileOutputStream fos = new FileOutputStream(upload_directory + File.separator + fileName);
+			FileOutputStream fos = new FileOutputStream(Constants.RESOURCE_DIRECTORY + upload_directory + File.separator + fileName);
 			fos.write(data);
 
 			fos.flush();
 			fos.close();
 
-			return fileName;
+			return upload_directory+"/"+fileName;
 
 		} catch (Exception e) {
 			log.error("File Upload fail Because : ");

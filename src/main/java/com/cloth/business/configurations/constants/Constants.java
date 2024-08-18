@@ -7,6 +7,7 @@ import java.util.List;
 public class Constants {
 	public static final long USER_IMAGE_MAX_SIZE = 5 * 1024 * 1024; // 5MB
     public static final List<String> USER_IMAGE_ALLOWED_EXTENSIONS = Arrays.asList("png", "jpg", "jpeg");
-    public static final String USER_IMAGE_UPLOAD_DIRECTORY = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator + "images" + File.separator + "userimages";
+    public static final String USER_IMAGE_UPLOAD_DIRECTORY = "images/userimages";
+    public static final String RESOURCE_DIRECTORY ="src" + File.separator + "main" + File.separator + "resources" + File.separator + "static" + File.separator ;
 	
 }
