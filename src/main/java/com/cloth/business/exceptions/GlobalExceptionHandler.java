@@ -281,7 +281,7 @@ public class GlobalExceptionHandler {
 				"" + ex.getMessage()
 		);
 
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 	}
 	
     
@@ -316,7 +316,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNullPointerException(NullPointerException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
             LocalDateTime.now(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
             "Bad Request",
             "A NullPointerException occurred: " + ex.getMessage()
         );

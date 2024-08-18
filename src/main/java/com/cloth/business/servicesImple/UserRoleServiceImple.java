@@ -1,29 +1,28 @@
 package com.cloth.business.servicesImple;
 
-import com.cloth.business.DTO.UserDTO;
-import com.cloth.business.entities.User;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceAlreadyExistsException;
 import com.cloth.business.exceptions.ResourceNotFoundException;
-import com.cloth.business.repositories.UserRepository;
+import com.cloth.business.helpers.HelperUtils;
+import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.UserRoleRepository;
 import com.cloth.business.services.UserRoleServices;
-import com.cloth.business.services.UserServices;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class UserRoleServiceImple implements UserRoleServices {
 
     @Autowired
     private UserRoleRepository userRoleRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
 
     @Override
@@ -59,5 +58,58 @@ public class UserRoleServiceImple implements UserRoleServices {
         List<UserRole> all = new ArrayList<>();
         all = userRoleRepository.findAll();
         return all;
+    }
+    
+    @Override
+    public PageResponse getAllRoles(int pageNumber, int size, String sortBy, String sortDirection) {
+    	Sort sort = null;
+		if (sortDirection.equalsIgnoreCase("asc")) {
+			sort = Sort.by(sortBy).ascending();
+		} else {
+			sort = Sort.by(sortBy).descending();
+		}
+		
+		Page<UserRole> pageInfo;
+		
+		try {
+			Pageable pageable = PageRequest.of(pageNumber, size, sort);
+			pageInfo = userRoleRepository.findAll(pageable);
+		} catch (Exception e) {
+			Pageable pageable = PageRequest.of(pageNumber, size, Sort.by("id").descending());
+			pageInfo = userRoleRepository.findAll(pageable);
+		}
+
+		
+		PageResponse pageToPageResponse = HelperUtils.pageToPageResponse(pageInfo);
+		
+    	return pageToPageResponse;
+    }
+    
+    
+    
+    //search roles
+    @Override
+    public PageResponse searchRoles(String query, int page, int size, String sortBy, String sortDirection) {
+    	Sort sort = null;
+		if (sortDirection.equalsIgnoreCase("asc")) {
+			sort = Sort.by(sortBy).ascending();
+		} else {
+			sort = Sort.by(sortBy).descending();
+		}
+		
+		Page<UserRole> pageInfo;
+		
+		try {
+			Pageable pageable = PageRequest.of(page, size, sort);
+			pageInfo = userRoleRepository.searchRoles(query, query, query, pageable);
+		} catch (Exception e) {
+			Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+			pageInfo = userRoleRepository.searchRoles(query, query, query, pageable);
+		}
+
+		
+		PageResponse pageToPageResponse = HelperUtils.pageToPageResponse(pageInfo);
+		
+    	return pageToPageResponse;
     }
 }
