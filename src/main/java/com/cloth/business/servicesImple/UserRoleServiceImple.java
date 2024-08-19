@@ -112,4 +112,18 @@ public class UserRoleServiceImple implements UserRoleServices {
 		
     	return pageToPageResponse;
     }
+    
+    
+    
+    @Override
+    public Boolean updateRoleStatus(Long id) {
+    	UserRole roleById = this.getRoleById(id);
+    	roleById.setIsActive(!roleById.getIsActive());
+    	UserRole save = userRoleRepository.save(roleById);
+    	if(save == null ) {
+    		return false;
+    	}else{    		
+    		return true;
+    	}
+    }
 }

@@ -1,5 +1,6 @@
 package com.cloth.business.payloads;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PageResponse {
 	
-	private List<?> content;
+	private List<?> content = new ArrayList<>();
 	
 	private int page;
 	

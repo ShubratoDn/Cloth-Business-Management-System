@@ -5,6 +5,8 @@ import com.cloth.business.entities.Store;
 import com.cloth.business.entities.User;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceNotFoundException;
+import com.cloth.business.helpers.HelperUtils;
+import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.UserRepository;
 import com.cloth.business.services.FileServices;
 import com.cloth.business.services.StoreServices;
@@ -12,6 +14,10 @@ import com.cloth.business.services.UserRoleServices;
 import com.cloth.business.services.UserServices;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -127,5 +133,30 @@ public class UserServiceImple implements UserServices {
     }
 
 
+    
+    @Override
+    public PageResponse searchUser(String query, int page, int size, String sortBy, String sortDirection) {
+    	Sort sort = null;
+		if (sortDirection.equalsIgnoreCase("asc")) {
+			sort = Sort.by(sortBy).ascending();
+		} else {
+			sort = Sort.by(sortBy).descending();
+		}
+		
+		Page<User> pageInfo;
+		
+		try {
+			Pageable pageable = PageRequest.of(page, size, sort);
+			pageInfo = userRepository.searchByFields(query, query, query, query, query, pageable);
+		} catch (Exception e) {
+			Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+			pageInfo = userRepository.searchByFields(query, query, query,query, query, pageable);
+		}
+
+		
+		PageResponse pageToPageResponse = HelperUtils.pageToPageResponse(pageInfo);
+		
+    	return pageToPageResponse;
+    }
 
 }

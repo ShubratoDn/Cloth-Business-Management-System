@@ -14,4 +14,6 @@ public interface UserRoleServices {
     PageResponse getAllRoles(int page, int size, String sortBy, String sortDirection);
 
     PageResponse searchRoles(String query, int page, int size, String sortBy, String sortDirection);
+    
+    Boolean updateRoleStatus(Long id);
 }

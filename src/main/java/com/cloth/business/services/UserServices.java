@@ -3,6 +3,7 @@ package com.cloth.business.services;
 import java.util.List;
 
 import com.cloth.business.DTO.UserDTO;
+import com.cloth.business.payloads.PageResponse;
 
 public interface UserServices {
     UserDTO findByPhoneOrEmail(String phone, String email);
@@ -18,4 +19,6 @@ public interface UserServices {
     UserDTO addUser(UserDTO userDTO);
     
     UserDTO updateUser(UserDTO userDTO);
+    
+    PageResponse searchUser(String query, int page, int size, String sortBy, String sortDirection);
 }

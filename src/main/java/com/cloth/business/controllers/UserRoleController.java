@@ -32,6 +32,11 @@ public class UserRoleController {
         return ResponseEntity.ok(userRoleService.getAllRoles(pageNumber, pageSize, sortBy, sortDirection));
     }
     
+    @GetMapping("/all")
+    public ResponseEntity<?> allRoles(){
+        return ResponseEntity.ok(userRoleService.getAllRoles());
+    }
+    
     
     @GetMapping("/search")
     public ResponseEntity<?> searchRoles(
@@ -46,7 +51,8 @@ public class UserRoleController {
     
     
     @PutMapping("/{id}/updateStatus")
-    public ResponseEntity<?> updateStatus(){
+    public ResponseEntity<?> updateStatus(@PathVariable Long id){
+    	userRoleService.updateRoleStatus(id);
     	return ResponseEntity.ok(true);
     }
 
