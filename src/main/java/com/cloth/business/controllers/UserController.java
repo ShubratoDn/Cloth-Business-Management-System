@@ -1,6 +1,7 @@
 package com.cloth.business.controllers;
 
 import com.cloth.business.DTO.UserDTO;
+import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.configurations.security.CustomUserDetails;
 import com.cloth.business.entities.User;
 import com.cloth.business.entities.UserRole;
@@ -36,11 +37,13 @@ public class UserController {
 	}
 
 	@GetMapping("/all")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_USER_GET"})
 	public ResponseEntity<?> getAllUser() {
 		return ResponseEntity.ok(userService.getAllUsers());
 	}
 
 	@GetMapping("/search")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_USER_GET"})
 	public ResponseEntity<?> search(
 			@RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
 			@RequestParam(value = "size", defaultValue = "5", required = false) int pageSize,
@@ -53,11 +56,13 @@ public class UserController {
 	}
 
 	@GetMapping("/{userId}")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_USER_GET"})
 	public ResponseEntity<?> getUserByiD(@PathVariable Long userId) {
 		return ResponseEntity.ok(userService.findById(userId));
 	}
 
 	@PutMapping("/{userId}")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_USER_UPDATE"})
 	public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable Long userId) {
 
 		UserDTO dbUser = userService.findById(userId);
@@ -103,6 +108,7 @@ public class UserController {
 	
 	
 	@PutMapping("/{userId}/roles")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_ROLE_ASSIGN"})
 	public ResponseEntity<?> updateUserRoles(@RequestBody UserDTO userDTO, @PathVariable Long userId) {
 		userDTO.setId(userId);
 		UserDTO updateUserRoles = userService.updateUserRoles(userDTO);

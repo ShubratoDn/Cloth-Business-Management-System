@@ -103,7 +103,11 @@ public class AuthController {
 		String token = jwtTokenUtil.generateToken(userDetails);
 
 		UserDTO user = userServices.findByPhoneOrEmail(username, username);
-
+		
+		
+		user.setLogoutRequired(false);		
+		userServices.updateUser(user);
+		
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.setToken(token);
 		loginResponse.setUser(user);

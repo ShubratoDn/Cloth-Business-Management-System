@@ -126,16 +126,16 @@ public class UserServiceImple implements UserServices {
     @Override
     public UserDTO updateUserRoles(UserDTO userDTO) {
     	
-    	UserDTO dbUser = this.findById(userDTO.getId());
+    	User dbUser = userRepository.findById(userDTO.getId()).get();
     	
     	List<UserRole> roles = new ArrayList<>();
         for(UserRole userRole : userDTO.getRoles()) {
             roles.add(userRoleService.getRoleById(userRole.getId()));
         }
         dbUser.setRoles(roles);
+        dbUser.setLogoutRequired(true);
         
-        User user = modelMapper.map(dbUser, User.class);
-        User save = userRepository.save(user);
+        User save = userRepository.save(dbUser);
         if(save != null) {
             return modelMapper.map(save, UserDTO.class);
         }

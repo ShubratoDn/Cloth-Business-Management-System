@@ -34,7 +34,9 @@ public class CustomUserDetails implements UserDetails {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		
 		for(UserRole role: roles) {
-			authorities.add(new SimpleGrantedAuthority(role.getRole()));
+			if(role.getIsActive()) {				
+				authorities.add(new SimpleGrantedAuthority(role.getRole()));
+			}
 		}
 		
 		return authorities;
@@ -72,6 +74,10 @@ public class CustomUserDetails implements UserDetails {
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	
+	public Boolean logoutRequired() {
+		return user.getLogoutRequired();
 	}
 
 }

@@ -41,6 +41,7 @@ public class UserDTO implements Serializable {
     private Boolean isLocked;
     private Date createdAt;
     private Date updatedAt;
+    private Boolean logoutRequired;
     
     @NotNull(message = "Image is required")
     private MultipartFile userImage;
@@ -71,4 +72,16 @@ public class UserDTO implements Serializable {
     public void setUserImage(MultipartFile userImage) {
         this.userImage = userImage;
     }
+    
+    
+    @JsonIgnore
+    public Boolean getLogoutRequired() {
+        return this.logoutRequired;
+    }
+
+    @JsonProperty
+    public void setLogoutRequired(Boolean logoutRequired) {
+        this.logoutRequired = logoutRequired;
+    }
+    
 }

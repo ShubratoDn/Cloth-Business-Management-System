@@ -41,4 +41,6 @@ public class User implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Store> ownedStore = new ArrayList<>();
+    
+    private Boolean logoutRequired;
 }
