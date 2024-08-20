@@ -3,6 +3,7 @@ package com.cloth.business.controllers;
 import com.cloth.business.DTO.UserDTO;
 import com.cloth.business.configurations.security.CustomUserDetails;
 import com.cloth.business.entities.User;
+import com.cloth.business.entities.UserRole;
 import com.cloth.business.payloads.ErrorResponse;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.services.UserServices;
@@ -96,5 +97,17 @@ public class UserController {
 
 		return ResponseEntity.ok(savedUser);
 	}
+	
+	
+	
+	
+	
+	@PutMapping("/{userId}/roles")
+	public ResponseEntity<?> updateUserRoles(@RequestBody UserDTO userDTO, @PathVariable Long userId) {
+		userDTO.setId(userId);
+		UserDTO updateUserRoles = userService.updateUserRoles(userDTO);
+		return ResponseEntity.ok(updateUserRoles);
+	}
+
 
 }
