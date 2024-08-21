@@ -18,8 +18,14 @@ public class Store {
 	
 	private String address;
 
+	private String storeName;
+	
 	private String storeCode;
+	
+	private String image;
+	
 	private String remark;
 
+	private Boolean isActive;
 	
 }

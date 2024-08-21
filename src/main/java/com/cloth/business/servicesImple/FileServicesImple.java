@@ -46,6 +46,28 @@ public class FileServicesImple implements FileServices {
 		return uploadDirectory;
 		
 	}
+	
+	
+	
+	@Override
+	public String uploadStoreImage(MultipartFile imageFile) {
+		// Validate file size
+		if (imageFile.getSize() > Constants.STORE_IMAGE_MAX_SIZE) {
+			throw new FileUploadingException("userImage", "File size exceeds the maximum limit of "+Constants.STORE_IMAGE_MAX_SIZE+"MB");
+		}
+
+		// Validate file extension
+		String fileName = imageFile.getOriginalFilename();
+		if (fileName != null && !isExtensionAllowed(fileName, Constants.STORE_IMAGE_ALLOWED_EXTENSIONS)) {
+			throw new FileUploadingException("storeImage",
+					"Invalid file extension. Allowed extensions are jpg, jpeg, png");
+		}
+
+		
+		String uploadDirectory = this.uploadFile(imageFile, generateRandomText(imageFile), "storeImage", Constants.STORE_IMAGE_UPLOAD_DIRECTORY);
+		return uploadDirectory;
+		
+	}
 
 	
 	/**
@@ -102,7 +124,7 @@ public class FileServicesImple implements FileServices {
 			File rDir = new File(Constants.RESOURCE_DIRECTORY);
 			rDir.mkdirs();
 			
-			File f = new File(upload_directory);
+			File f = new File(Constants.RESOURCE_DIRECTORY+File.separator+upload_directory);
 			f.mkdirs();
 
 			InputStream inputStream = file.getInputStream();
