@@ -7,6 +7,7 @@ import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
+import com.cloth.business.repositories.StoreRepository;
 import com.cloth.business.repositories.UserRepository;
 import com.cloth.business.services.FileServices;
 import com.cloth.business.services.StoreServices;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,9 @@ public class UserServiceImple implements UserServices {
     
     @Autowired
     private FileServices fileServices;
+    
+    @Autowired
+    private StoreRepository storeRepository;
 
     @Override
     public UserDTO findByPhoneOrEmail(String phone, String email) {    	
@@ -104,14 +109,14 @@ public class UserServiceImple implements UserServices {
 
         
         List<Store> stores = new ArrayList<>();
-        for(Store store : userDTO.getOwnedStore()) {
+        for(Store store : userDTO.getAssignedStore()) {
             stores.add(storeService.getStoreById(store.getId()));
         }
 
         
         
         userDTO.setRoles(roles);
-        userDTO.setOwnedStore(stores);
+        userDTO.setAssignedStore(stores);
         
         User user = modelMapper.map(userDTO, User.class);
         User save = userRepository.save(user);
@@ -180,4 +185,31 @@ public class UserServiceImple implements UserServices {
     	return pageToPageResponse;
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @Transactional
+    public void updateUserAssignedStore(Long userId, Long storeId) {
+        
+        UserDTO user = this.findById(userId);
+        
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Store not found with id: " + storeId));
+
+        if (user.getAssignedStore().contains(store)) {
+            // Store is already assigned to the user, remove it
+            user.getAssignedStore().remove(store);
+        } else {
+            // Store is not assigned to the user, add it
+            user.getAssignedStore().add(store);
+        }
+
+        userRepository.save(modelMapper.map(user, User.class));
+    }
 }

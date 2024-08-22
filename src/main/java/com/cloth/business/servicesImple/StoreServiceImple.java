@@ -1,13 +1,8 @@
 package com.cloth.business.servicesImple;
 
 
-import com.cloth.business.entities.Store;
-import com.cloth.business.entities.User;
-import com.cloth.business.exceptions.ResourceNotFoundException;
-import com.cloth.business.helpers.HelperUtils;
-import com.cloth.business.payloads.PageResponse;
-import com.cloth.business.repositories.StoreRepository;
-import com.cloth.business.services.StoreServices;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,14 +11,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.cloth.business.entities.Store;
+import com.cloth.business.exceptions.ResourceNotFoundException;
+import com.cloth.business.helpers.HelperUtils;
+import com.cloth.business.payloads.PageResponse;
+import com.cloth.business.repositories.StoreRepository;
+import com.cloth.business.services.StoreServices;
 
 @Service
 public class StoreServiceImple implements StoreServices {
 
     @Autowired
     private StoreRepository storeRepository;
+    
 
     @Override
     public Store addStore(Store store) {
@@ -74,6 +74,5 @@ public class StoreServiceImple implements StoreServices {
 		
     	return pageToPageResponse;
     }
-    
     
 }

@@ -40,7 +40,7 @@ public class User implements Serializable {
     private List<UserRole> roles = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Store> ownedStore = new ArrayList<>();
+    private List<Store> assignedStore  = new ArrayList<>();
     
     private Boolean logoutRequired;
 }

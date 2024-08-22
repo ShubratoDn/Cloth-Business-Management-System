@@ -50,7 +50,7 @@ public class UserDTO implements Serializable {
     
     private List<UserRole> roles = new ArrayList<>();
     
-    private List<Store> ownedStore = new ArrayList<>();
+    private List<Store> assignedStore = new ArrayList<>();
     
     @JsonIgnore
     public String getPassword() {

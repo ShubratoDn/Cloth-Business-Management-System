@@ -93,7 +93,7 @@ public class UserController {
 		dbUser.setAddress(userDTO.getAddress());
 		dbUser.setRemark(userDTO.getRemark());
 		dbUser.setRoles(userDTO.getRoles());
-		dbUser.setOwnedStore(userDTO.getOwnedStore());
+		dbUser.setAssignedStore(userDTO.getAssignedStore());
 
 		// Save the user
 		UserDTO savedUser = userService.updateUser(dbUser);
@@ -113,6 +113,15 @@ public class UserController {
 		userDTO.setId(userId);
 		UserDTO updateUserRoles = userService.updateUserRoles(userDTO);
 		return ResponseEntity.ok(updateUserRoles);
+	}
+
+	
+	
+	@PutMapping("/{userId}/stores/{storeId}/assign")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_STORE_ASSIGN"})
+	public ResponseEntity<?> updateUserStore(@PathVariable Long userId, @PathVariable Long storeId ) {
+		userService.updateUserAssignedStore(userId, storeId);
+		return ResponseEntity.ok("OK ok");
 	}
 
 

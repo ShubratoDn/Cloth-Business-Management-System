@@ -22,5 +22,7 @@ public interface UserServices {
     
     PageResponse searchUser(String query, int page, int size, String sortBy, String sortDirection);
     
-    UserDTO updateUserRoles(UserDTO userDTO);
+    UserDTO updateUserRoles(UserDTO userDTO);    
+    
+    void updateUserAssignedStore(Long userId, Long storeId);
 }
