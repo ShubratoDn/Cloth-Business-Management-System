@@ -1,59 +1,52 @@
 package com.cloth.business.controllers;
 
-import com.cloth.business.configurations.annotations.CheckRoles;
-import com.cloth.business.configurations.security.CustomSecurityExpression;
+import com.cloth.business.entities.Product;
+import com.cloth.business.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/v1/products")
+import java.util.Optional;
+
 @RestController
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
 	@Autowired
-	private CustomSecurityExpression customSecurityExpression;
+	private ProductService productService;
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@GetMapping("/all")
-	public ResponseEntity<?> getAllProducts(){
-		return ResponseEntity.ok("All Product List");
+	@PostMapping("")
+	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+		Product newProduct = productService.createProduct(product);
+		return ResponseEntity.ok(newProduct);
 	}
-	
-	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_GET')")
-	@GetMapping("/{productId}")
-	public ResponseEntity<?> getProduct(@PathVariable Long productId){
-		return ResponseEntity.ok("Product with id " + productId);
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+		Product product = productService.getProductById(id);
+		return ResponseEntity.ok(product);
 	}
-	
-	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_CREATE')")
-	@PostMapping("/")
-	public ResponseEntity<?> addProduct(){
-		return ResponseEntity.ok("Product has been created!");
+
+	@GetMapping("")
+	public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
+		Page<Product> products = productService.getAllProducts(pageable);
+		return ResponseEntity.ok(products);
 	}
-	
-	
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_UPDATE')")
-	@CheckRoles({"ROLE_ADMIN", "ROLE_PRODUCT_UPDATE"})
-	@PutMapping("/")
-	public ResponseEntity<?> updateProduct(){
-		return ResponseEntity.ok("Product Updated!");
+
+	@PutMapping("/{id}")
+	public ResponseEntity<Product> updateProduct(
+			@PathVariable Long id,
+			@RequestBody Product product) {
+		Product updatedProduct = productService.updateProduct(id, product);
+		return updatedProduct != null ? ResponseEntity.ok(updatedProduct)
+				: ResponseEntity.notFound().build();
 	}
-	
-	
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_PRODUCT_DELETE')")
-	@PreAuthorize("@customSecurityExpression.hasPermission('ROLE_PRODUCT_DELETE')")
-	@DeleteMapping("/")
-	public ResponseEntity<?> deleteProduct(){
-		return ResponseEntity.ok("Product Deleted!");
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+		productService.deleteProduct(id);
+		return ResponseEntity.noContent().build();
 	}
-	
 }

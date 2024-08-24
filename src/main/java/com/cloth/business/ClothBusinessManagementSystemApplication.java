@@ -1,6 +1,10 @@
 package com.cloth.business;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -45,6 +49,33 @@ public class ClothBusinessManagementSystemApplication implements CommandLineRunn
     public void run(String... args) throws Exception {
     	List<UserRole> userRoles = UserRolesList.userRoles;
     	saveAllRoles(userRoles);
+
+
+		try {
+			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+
+			if (networkInterfaces == null) {
+				System.out.println("No network interfaces found.");
+				return;
+			}
+
+			while (networkInterfaces.hasMoreElements()) {
+				NetworkInterface networkInterface = networkInterfaces.nextElement();
+				Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+
+				while (inetAddresses.hasMoreElements()) {
+					InetAddress inetAddress = inetAddresses.nextElement();
+
+					if (inetAddress.isSiteLocalAddress() && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && !inetAddress.isMulticastAddress()) {
+						if (inetAddress.getHostAddress().indexOf(':') == -1) { // Check if it's an IPv4 address
+							System.out.println("Interface: " + networkInterface.getName() + ", IP Address: " + inetAddress.getHostAddress());
+						}
+					}
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
     }
 
 //    @CacheEvict(value = "userRoles", key = "#userRoles")
