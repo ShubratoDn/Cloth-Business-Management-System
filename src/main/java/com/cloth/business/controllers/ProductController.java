@@ -2,13 +2,15 @@ package com.cloth.business.controllers;
 
 import com.cloth.business.entities.Product;
 import com.cloth.business.services.ProductService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -18,7 +20,7 @@ public class ProductController {
 	private ProductService productService;
 
 	@PostMapping("")
-	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+	public ResponseEntity<Product> createProduct(@Valid @ModelAttribute Product product) {				
 		Product newProduct = productService.createProduct(product);
 		return ResponseEntity.ok(newProduct);
 	}

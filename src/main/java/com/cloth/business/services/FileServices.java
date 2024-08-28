@@ -8,4 +8,6 @@ public interface FileServices {
 	
 	public String uploadStoreImage(MultipartFile imageFile);
 	
+	public String uploadProductImage(MultipartFile imageFile);
+	
 }

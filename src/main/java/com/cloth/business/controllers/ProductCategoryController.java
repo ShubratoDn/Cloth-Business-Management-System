@@ -29,6 +29,12 @@ public class ProductCategoryController {
                        .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductCategory>> getProductCategoryById(@RequestParam(name = "query", required = false, defaultValue = "") String query) {
+        List<ProductCategory> searchProductCategories = productCategoryService.searchProductCategories(query);
+        return ResponseEntity.ok(searchProductCategories);
+    }
+    
     @GetMapping("")
     public ResponseEntity<List<ProductCategory>> getAllProductCategories() {
         List<ProductCategory> categories = productCategoryService.getAllProductCategories();

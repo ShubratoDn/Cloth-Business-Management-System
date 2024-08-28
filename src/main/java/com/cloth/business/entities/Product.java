@@ -5,10 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.ToString;
+
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Entity
+@ToString
 public class Product {
 
     @Id
@@ -21,11 +24,7 @@ public class Product {
 
     @NotBlank(message = "Product name is required")
     private String name;
-
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
-    private Double price;
-
+    
     @NotBlank(message = "Size is required")
     private String size;
 
@@ -45,4 +44,8 @@ public class Product {
     public void setProductImage(MultipartFile productImage) {
         this.productImage = productImage;
     }
+    
+    
+    @Transient
+    private String productCategory;
 }

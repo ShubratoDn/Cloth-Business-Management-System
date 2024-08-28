@@ -6,6 +6,9 @@ import lombok.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -19,6 +22,16 @@ public class ProductCategory {
     @NotBlank(message = "Category name is required")
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Product> products;
+
+    @JsonIgnore
+	public List<Product> getProducts() {
+		return products;
+	}
+
+    @JsonProperty
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
 }

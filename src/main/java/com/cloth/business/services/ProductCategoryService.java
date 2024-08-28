@@ -9,6 +9,7 @@ public interface ProductCategoryService {
     ProductCategory createProductCategory(ProductCategory productCategory);
     Optional<ProductCategory> getProductCategoryById(Long id);
     List<ProductCategory> getAllProductCategories();
+    List<ProductCategory> searchProductCategories(String query);
     ProductCategory updateProductCategory(Long id, ProductCategory productCategory);
     void deleteProductCategory(Long id);
 }

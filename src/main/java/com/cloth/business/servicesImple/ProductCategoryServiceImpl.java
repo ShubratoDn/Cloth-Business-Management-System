@@ -30,6 +30,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return productCategoryRepository.findAll();
     }
 
+	@Override
+	public List<ProductCategory> searchProductCategories(String query) {		
+		return productCategoryRepository.findByNameContaining(query);
+	}
+
     @Override
     public ProductCategory updateProductCategory(Long id, ProductCategory productCategoryDetails) {
         Optional<ProductCategory> category = productCategoryRepository.findById(id);

@@ -53,7 +53,7 @@ public class FileServicesImple implements FileServices {
 	public String uploadStoreImage(MultipartFile imageFile) {
 		// Validate file size
 		if (imageFile.getSize() > Constants.STORE_IMAGE_MAX_SIZE) {
-			throw new FileUploadingException("userImage", "File size exceeds the maximum limit of "+Constants.STORE_IMAGE_MAX_SIZE+"MB");
+			throw new FileUploadingException("storeImage", "File size exceeds the maximum limit of "+Constants.STORE_IMAGE_MAX_SIZE+"MB");
 		}
 
 		// Validate file extension
@@ -69,6 +69,30 @@ public class FileServicesImple implements FileServices {
 		
 	}
 
+	
+	
+	@Override
+	public String uploadProductImage(MultipartFile imageFile) {
+		// Validate file size
+		if (imageFile.getSize() > Constants.PRODUCT_IMAGE_MAX_SIZE) {
+			throw new FileUploadingException("productImage",
+					"File size exceeds the maximum limit of " + Constants.STORE_IMAGE_MAX_SIZE + "MB");
+		}
+
+		// Validate file extension
+		String fileName = imageFile.getOriginalFilename();
+		if (fileName != null && !isExtensionAllowed(fileName, Constants.PRODUCT_IMAGE_ALLOWED_EXTENSIONS)) {
+			throw new FileUploadingException("productImage",
+					"Invalid file extension. Allowed extensions are jpg, jpeg, png");
+		}
+
+		String uploadDirectory = this.uploadFile(imageFile, generateRandomText(imageFile), "storeImage",
+				Constants.PRODUCT_IMAGE_UPLOAD_DIRECTORY);
+		return uploadDirectory;
+				
+	}
+	
+	
 	
 	/**
      * Checks if the file extension is allowed.

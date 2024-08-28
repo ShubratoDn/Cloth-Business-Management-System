@@ -19,7 +19,9 @@ public class Constants {
     public static final String STORE_IMAGE_UPLOAD_DIRECTORY = "images/storeimages";
     
 	
-   
+    public static final long PRODUCT_IMAGE_MAX_SIZE = 10 * 1024 * 1024; // 5MB
+    public static final List<String> PRODUCT_IMAGE_ALLOWED_EXTENSIONS = Arrays.asList("png", "jpg", "jpeg");
+    public static final String PRODUCT_IMAGE_UPLOAD_DIRECTORY = "images/productimages";
     
     
 }
