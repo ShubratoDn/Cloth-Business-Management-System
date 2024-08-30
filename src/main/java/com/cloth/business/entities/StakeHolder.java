@@ -44,18 +44,4 @@ public class StakeHolder {
 	
 	private Date updatedAt;
 	
-	@Transient
-	private MultipartFile stakeHolderImage;
-	
-	@JsonIgnore
-	public MultipartFile getStakeHolderImage() {
-		return stakeHolderImage;
-	}
-	
-	@JsonProperty
-	public void setStakeHolderImage(MultipartFile stakeHolderImage) {
-		this.stakeHolderImage = stakeHolderImage;
-	}
-	
-	
 }
