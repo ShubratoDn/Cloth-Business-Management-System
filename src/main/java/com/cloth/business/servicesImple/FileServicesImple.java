@@ -94,6 +94,32 @@ public class FileServicesImple implements FileServices {
 	
 	
 	
+	@Override
+	public String uploadStakeholderImage(MultipartFile imageFile) {
+		// Validate file size
+		if (imageFile.getSize() > Constants.PRODUCT_IMAGE_MAX_SIZE) {
+			throw new FileUploadingException("stakeholderImage",
+					"File size exceeds the maximum limit of " + Constants.STORE_IMAGE_MAX_SIZE + "MB");
+		}
+
+		// Validate file extension
+		String fileName = imageFile.getOriginalFilename();
+		if (fileName != null && !isExtensionAllowed(fileName, Constants.PRODUCT_IMAGE_ALLOWED_EXTENSIONS)) {
+			throw new FileUploadingException("stakeholderImage",
+					"Invalid file extension. Allowed extensions are jpg, jpeg, png");
+		}
+
+		String uploadDirectory = this.uploadFile(imageFile, generateRandomText(imageFile), "stakeholderImage",
+				Constants.STAKEHOLDER_IMAGE_UPLOAD_DIRECTORY);
+		return uploadDirectory;
+				
+	}
+	
+	
+	
+	
+	
+	
 	/**
      * Checks if the file extension is allowed.
      *

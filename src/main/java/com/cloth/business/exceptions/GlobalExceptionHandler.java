@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.cloth.business.payloads.ErrorResponse;
+
+import org.springframework.beans.InvalidPropertyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -381,6 +383,27 @@ public class GlobalExceptionHandler {
         Map<String, String> response = new HashMap<>();
         response.put(ex.getKeyName(), ex.getErrorMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    
+    
+    /**
+     * Handles exceptions related to invalid properties in the request body.
+     * This method is triggered when an {@link InvalidPropertyException} occurs,
+     * indicating that a property in the request body is either missing or invalid.
+     *
+     * @param ex the exception indicating that a property is invalid
+     * @return a {@link ResponseEntity} containing an {@link ErrorResponse} with details about the error
+     */
+    @ExceptionHandler(InvalidPropertyException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidPropertyException(InvalidPropertyException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid Property",
+                "A property in the request body is invalid: " + ex.getPropertyName()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
 }

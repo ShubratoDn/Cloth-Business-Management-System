@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloth.business.entities.Store;
 import com.cloth.business.entities.enums.StakeHolderType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,6 +46,8 @@ public class StakeHolderDTO {
     private Date updatedAt;
 
     private MultipartFile stakeHolderImage;
+    
+    private Store store;
 
     @JsonIgnore
     public MultipartFile getStakeHolderImage() {

@@ -2,11 +2,7 @@ package com.cloth.business.entities;
 
 import java.util.Date;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.cloth.business.entities.enums.StakeHolderType;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,7 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Entity
@@ -43,5 +39,8 @@ public class StakeHolder {
 	private Date createdAt;
 	
 	private Date updatedAt;
+	
+	@OneToOne
+	private Store store;
 	
 }

@@ -22,11 +22,9 @@ public class StakeHolderController {
 
     @PostMapping
     @CheckRoles({"ROLE_ADMIN", "ROLE_STAKEHOLDER_CREATE"})
-    public ResponseEntity<?> createStakeHolder(@ModelAttribute StakeHolderDTO stakeHolder) {
-//        StakeHolder createdStakeHolder = stakeHolderService.createStakeHolder(stakeHolder);
-//        return new ResponseEntity<>(createdStakeHolder, HttpStatus.CREATED);
-    	System.out.println(stakeHolder);
-        return new ResponseEntity<>(stakeHolder, HttpStatus.CREATED);
+    public ResponseEntity<?> createStakeHolder(@ModelAttribute StakeHolderDTO stakeHolderDto) {
+        StakeHolder createdStakeHolder = stakeHolderService.createStakeHolder(stakeHolderDto);
+        return new ResponseEntity<>(createdStakeHolder, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

@@ -24,4 +24,7 @@ public class Constants {
     public static final String PRODUCT_IMAGE_UPLOAD_DIRECTORY = "images/productimages";
     
     
+    
+    public static final String STAKEHOLDER_IMAGE_UPLOAD_DIRECTORY = "images/stakeholderimages";
+    
 }
