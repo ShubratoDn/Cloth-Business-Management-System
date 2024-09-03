@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import com.cloth.business.configurations.security.CustomUserDetails;
 import com.cloth.business.configurations.security.CustomUserDetailsServiceImpl;
-import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.payloads.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			} catch (ExpiredJwtException e) {
 				// Create an ErrorResponse object
 				ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(),
-						"Session has expired", e.getMessage());
+						"SESSION_EXPIRED", "Session has expired. Login required");
 
 				// Serialize the ErrorResponse object to JSON
 				ObjectMapper objectMapper = new ObjectMapper();
