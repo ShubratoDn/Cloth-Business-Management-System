@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -48,6 +49,13 @@ public class StakeHolderController {
     @GetMapping
     public ResponseEntity<Page<StakeHolder>> getAllStakeHolders(Pageable pageable) {
         Page<StakeHolder> stakeHolders = stakeHolderService.getAllStakeHolders(pageable);
+        return ResponseEntity.ok(stakeHolders);
+    }
+
+
+    @GetMapping("/type/{type}/store/{storeId}")
+    public ResponseEntity<?> getStakeHolderByTypeAndStore(@PathVariable String type, @PathVariable Long storeId) {
+        List<StakeHolder> stakeHolders = stakeHolderService.getStakeHoldersByTypeAndStore(type, storeId);
         return ResponseEntity.ok(stakeHolders);
     }
 }

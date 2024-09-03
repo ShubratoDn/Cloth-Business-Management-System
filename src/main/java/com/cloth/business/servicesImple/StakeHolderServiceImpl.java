@@ -2,6 +2,8 @@ package com.cloth.business.servicesImple;
 
 import com.cloth.business.DTO.StakeHolderDTO;
 import com.cloth.business.entities.StakeHolder;
+import com.cloth.business.entities.Store;
+import com.cloth.business.entities.enums.StakeHolderType;
 import com.cloth.business.exceptions.ResourceAlreadyExistsException;
 import com.cloth.business.repositories.StakeHolderRepository;
 import com.cloth.business.services.FileServices;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,5 +85,24 @@ public class StakeHolderServiceImpl implements StakeHolderService {
     @Override
     public Page<StakeHolder> getAllStakeHolders(Pageable pageable) {
         return stakeHolderRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<StakeHolder> getStakeHoldersByTypeAndStore(String type, Long storeId) {
+        // Convert String to StakeHolderType enum
+        StakeHolderType stakeHolderType;
+        try {
+            stakeHolderType = StakeHolderType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Handle invalid type string
+            throw new IllegalArgumentException("Invalid StakeHolderType: " + type);
+        }
+
+        // Create Store object with the provided storeId
+        Store store = new Store();
+        store.setId(storeId);
+
+        // Retrieve stakeholders from the repository
+        return stakeHolderRepository.findByStakeHolderTypeAndStore(stakeHolderType, store);
     }
 }

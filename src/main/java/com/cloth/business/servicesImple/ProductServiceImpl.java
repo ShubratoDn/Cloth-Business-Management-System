@@ -54,8 +54,10 @@ public class ProductServiceImpl implements ProductService {
     		throw new ResourceAlreadyExistsException("The product is already exists");
     	}
     	
-    	String uploadProductImage = fileServices.uploadProductImage(product.getProductImage());
-    	product.setImage(uploadProductImage);
+    	if(product.getProductImage() != null){
+			String uploadProductImage = fileServices.uploadProductImage(product.getProductImage());
+			product.setImage(uploadProductImage);
+		}
     	
         return productRepository.save(product);
     }

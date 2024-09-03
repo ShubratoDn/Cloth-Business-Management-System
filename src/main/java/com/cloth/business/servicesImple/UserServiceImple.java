@@ -209,7 +209,7 @@ public class UserServiceImple implements UserServices {
             // Store is not assigned to the user, add it
             user.getAssignedStore().add(store);
         }
-
+        user.setLogoutRequired(true);
         userRepository.save(modelMapper.map(user, User.class));
     }
 }
