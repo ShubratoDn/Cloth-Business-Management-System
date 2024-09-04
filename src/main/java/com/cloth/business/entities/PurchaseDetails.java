@@ -1,5 +1,8 @@
 package com.cloth.business.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -36,4 +39,16 @@ public class PurchaseDetails {
     @JoinColumn(name = "purchase_id", nullable = false)
 //    @ToString.Exclude
     private Purchase purchase;
+
+    @JsonIgnore
+	public Purchase getPurchase() {
+		return purchase;
+	}
+
+    @JsonProperty
+	public void setPurchase(Purchase purchase) {
+		this.purchase = purchase;
+	}
+    
+    
 }

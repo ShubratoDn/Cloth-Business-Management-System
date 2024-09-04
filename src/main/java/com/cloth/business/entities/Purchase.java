@@ -8,6 +8,8 @@ import lombok.ToString;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Data
 @Entity
 @ToString
@@ -33,7 +35,9 @@ public class Purchase {
     @Column(nullable = false)
     private Double totalAmount;
 
-    @Temporal(TemporalType.TIMESTAMP)
+  
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd") // Ensure this matches the format you're using in the frontend
     private Date purchaseDate;
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
