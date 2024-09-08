@@ -1,5 +1,7 @@
 package com.cloth.business.entities;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -33,11 +35,27 @@ public class PurchaseDetails {
     @Min(value = 1, message = "Quantity must be at least 1")
     private int quantity;
 
-    private String remark;
+    private String remark;    
+    
+    private String image;
+
+    @Transient
+    private MultipartFile productImage;
+
+    @JsonIgnore
+    public MultipartFile getProductImage() {
+        return productImage;
+    }
+
+    @JsonProperty
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
+    }
+    
 
     @ManyToOne
     @JoinColumn(name = "purchase_id", nullable = false)
-//    @ToString.Exclude
+    @ToString.Exclude
     private Purchase purchase;
 
     @JsonIgnore

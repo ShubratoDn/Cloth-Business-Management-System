@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.entities.Purchase;
 
+import jakarta.validation.Valid;
+
 
 @RestController()
 @RequestMapping("/api/v1/purchases")
@@ -17,7 +19,7 @@ public class PurchaseController {
 
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_CREATE"})
 	@PostMapping
-	public ResponseEntity<?> addPurchase(@ModelAttribute Purchase purchaseInfo){
+	public ResponseEntity<?> addPurchase(@Valid @ModelAttribute Purchase purchaseInfo){
 		System.out.println("\n\n\nGot Request");
 		System.out.println(purchaseInfo);
 		return ResponseEntity.ok(purchaseInfo);
