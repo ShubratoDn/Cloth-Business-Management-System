@@ -36,9 +36,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-    	
-    	System.out.println("\n\n\nI'm here 3" + product.getCategory().getName());
-    	
     	//setting product category
     	ProductCategory productCategory = productCategoryRepository.findByName(product.getProductCategory());
     	if(productCategory == null) {

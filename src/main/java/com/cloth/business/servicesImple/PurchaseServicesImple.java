@@ -108,14 +108,15 @@ public class PurchaseServicesImple implements PurchaseServices {
 			
 			
 			
-			purchaseDetail.getQuantity() * purchaseDetail.getPrice();
-			grandTotal = grandTotal + (1);
+			Double total =  purchaseDetail.getQuantity() * purchaseDetail.getPrice();
+			grandTotal = grandTotal + (total);
 			
 			
 			purchaseDetail.setPurchase(purchase);			
 			updatedPurchaseDetails.add(purchaseDetail);
 		}
-		
+
+		purchase.setTotalAmount(grandTotal);
 		
 		return purchaseRepository.save(purchase);
 	}
