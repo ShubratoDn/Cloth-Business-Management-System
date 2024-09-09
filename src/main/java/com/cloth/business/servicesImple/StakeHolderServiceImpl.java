@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -104,5 +103,20 @@ public class StakeHolderServiceImpl implements StakeHolderService {
 
         // Retrieve stakeholders from the repository
         return stakeHolderRepository.findByStakeHolderTypeAndStore(stakeHolderType, store);
+    }
+    
+    
+    @Override
+    public StakeHolder getStakeHolderWithType(Long stakeholderId, String type) {
+    	// Convert String to StakeHolderType enum
+        StakeHolderType stakeHolderType;
+        try {
+            stakeHolderType = StakeHolderType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Handle invalid type string
+            throw new IllegalArgumentException("Invalid StakeHolderType: " + type);
+        }
+
+    	return stakeHolderRepository.findByIdAndStakeHolderType(stakeholderId, stakeHolderType);
     }
 }

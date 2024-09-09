@@ -14,4 +14,6 @@ public interface StakeHolderRepository extends JpaRepository<StakeHolder, Long> 
 	StakeHolder findByPhoneOrEmail(String phone, String email);
 
 	List<StakeHolder> findByStakeHolderTypeAndStore(StakeHolderType stakeHolderType, Store store);
+	
+	StakeHolder findByIdAndStakeHolderType(Long id, StakeHolderType stakeHolderType);
 }

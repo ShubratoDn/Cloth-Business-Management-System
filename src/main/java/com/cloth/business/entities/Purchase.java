@@ -19,7 +19,7 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @NotNull(message = "Store is required")
     private Store store;
     
@@ -32,7 +32,6 @@ public class Purchase {
     @JoinColumn(name = "added_by_id", nullable = false)
     private User addedBy;
 
-    @Column(nullable = false)
     private Double totalAmount;
 
   

@@ -9,7 +9,7 @@ import java.util.Map;
 import com.cloth.business.payloads.ErrorResponse;
 
 import org.springframework.beans.InvalidPropertyException;
-import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -247,21 +247,8 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
-
-
-
-
-	@ExceptionHandler(DataAccessResourceFailureException.class)
-	public ResponseEntity<ErrorResponse> handleDataAccessResourceFailureException(DataAccessResourceFailureException ex) {
-		ErrorResponse errorResponse = new ErrorResponse(
-				LocalDateTime.now(),
-				HttpStatus.BAD_REQUEST.value(),
-				"Connection Failed",
-				ex.getMessage()
-		);
-
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-	}
+	
+	
 	
 	
 	/**
@@ -390,6 +377,21 @@ public class GlobalExceptionHandler {
     }
 
     
+    
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        log.error("SQL Integrity Constraint Violation Exception: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            "SQL Integrity Constraint Violation",
+            ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
     
     
     @ExceptionHandler(FileUploadingException.class)
