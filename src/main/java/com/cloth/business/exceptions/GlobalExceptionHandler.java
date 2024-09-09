@@ -9,6 +9,7 @@ import java.util.Map;
 import com.cloth.business.payloads.ErrorResponse;
 
 import org.springframework.beans.InvalidPropertyException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -376,6 +377,21 @@ public class GlobalExceptionHandler {
     }
 
     
+    
+    
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        log.error("SQL Integrity Constraint Violation Exception: {}", ex.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.CONFLICT.value(),
+            "SQL Integrity Constraint Violation",
+            ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
     
     
     @ExceptionHandler(FileUploadingException.class)
