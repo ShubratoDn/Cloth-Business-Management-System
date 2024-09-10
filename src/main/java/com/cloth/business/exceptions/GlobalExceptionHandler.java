@@ -25,6 +25,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 
@@ -124,7 +125,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
-    
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(), 
+                HttpStatus.BAD_REQUEST.value(),
+                "File is too large.",
+                ""+ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
     
     
     

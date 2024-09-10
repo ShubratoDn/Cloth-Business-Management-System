@@ -19,6 +19,9 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "po_number")
+    private String poNumber;
+    
     @ManyToOne
     @NotNull(message = "Store is required")
     private Store store;
@@ -43,4 +46,6 @@ public class Purchase {
     private List<PurchaseDetails> purchaseDetails;
 
     private String remark;
+    
+    private Boolean isApproved;
 }

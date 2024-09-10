@@ -1,10 +1,17 @@
 package com.cloth.business.controllers;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloth.business.configurations.annotations.CheckRoles;
@@ -27,5 +34,32 @@ public class PurchaseController {
 		Purchase purchase = purchaseServices.createPurchase(purchaseInfo);
 		return ResponseEntity.ok(purchase);
 	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<?> searchPurchase(
+	        @RequestParam(value = "storeId", required = false) Long storeId,
+	        @RequestParam(value = "supplierId", required = false) Long supplierId,
+	        @RequestParam(value = "poNumber", required = false) String poNumber,
+	        @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate,
+	        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate,
+	        @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
+	        @RequestParam(value = "size", defaultValue = "5", required = false) int pageSize,
+	        @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+	        @RequestParam(value = "sortDirection", defaultValue = "desc", required = false) String sortDirection) {
+
+	    // Print values in the console
+	    System.out.println("storeId: " + storeId);
+	    System.out.println("supplierId: " + supplierId);
+	    System.out.println("poNumber: " + poNumber);
+	    System.out.println("fromDate: " + fromDate);
+	    System.out.println("toDate: " + toDate);
+	    System.out.println("pageNumber: " + pageNumber);
+	    System.out.println("pageSize: " + pageSize);
+	    System.out.println("sortBy: " + sortBy);
+	    System.out.println("sortDirection: " + sortDirection);
+	    
+	    return ResponseEntity.ok(purchaseServices.searchPurchase(storeId, supplierId, poNumber, fromDate, toDate, pageNumber, pageSize, sortBy, sortDirection));
+	}
+
 	
 }
