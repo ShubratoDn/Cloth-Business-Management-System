@@ -20,6 +20,7 @@ import com.cloth.business.entities.PurchaseDetails;
 import com.cloth.business.entities.StakeHolder;
 import com.cloth.business.entities.Store;
 import com.cloth.business.entities.User;
+import com.cloth.business.entities.enums.PurchaseStatus;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.ProductCategoryRepository;
@@ -156,7 +157,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	
 	@Override
-	public PageResponse searchPurchase(Long storeId, Long supplierId, String poNumber, Date fromDate, Date toDate, int page, int size, String sortBy, String sortDirection) {
+	public PageResponse searchPurchase(Long storeId, Long supplierId, String poNumber, PurchaseStatus purchaseStatus, Date fromDate, Date toDate, int page, int size, String sortBy, String sortDirection) {
 
 		Sort sort = null;
 		if (sortDirection.equalsIgnoreCase("asc")) {
@@ -168,7 +169,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		Page<Purchase> pageInfo;
 		
 		Pageable pageable = PageRequest.of(page, size, sort);
-		pageInfo = purchaseRepository.searchPurchases(storeId, supplierId, poNumber, fromDate, toDate, pageable);
+		pageInfo = purchaseRepository.searchPurchases(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageable);
 		return HelperUtils.pageToPageResponse(pageInfo);
 	}
 	

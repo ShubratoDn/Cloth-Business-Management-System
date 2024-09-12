@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.cloth.business.entities.enums.PurchaseStatus;
+
 @Data
 @Entity
 @ToString
@@ -47,5 +49,8 @@ public class Purchase {
 
     private String remark;
     
-    private Boolean isApproved;
+    @Enumerated(EnumType.STRING)
+    private PurchaseStatus purchaseStatus;
+    
+    private Date timestamp;
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.cloth.business.entities.Purchase;
+import com.cloth.business.entities.enums.PurchaseStatus;
 
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 	@Query("SELECT COUNT(p) FROM Purchase p WHERE p.store.id = :storeId")
@@ -19,12 +20,14 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 	           "(:storeId IS NULL OR p.store.id = :storeId) AND " +
 	           "(:supplierId IS NULL OR p.supplier.id = :supplierId) AND " +
 	           "(:poNumber IS NULL OR p.poNumber LIKE %:poNumber%) AND " +
+	           "(:purchaseStatus IS NULL OR p.purchaseStatus = :purchaseStatus) AND " +
 	           "(:fromDate IS NULL OR p.purchaseDate >= :fromDate) AND " +
 	           "(:toDate IS NULL OR p.purchaseDate <= :toDate)")
 	Page<Purchase> searchPurchases(
 	            @Param("storeId") Long storeId,
 	            @Param("supplierId") Long supplierId,
 	            @Param("poNumber") String poNumber,
+	            @Param("purchaseStatus") PurchaseStatus purchaseStatus,
 	            @Param("fromDate") Date fromDate,
 	            @Param("toDate") Date toDate,
 	            Pageable pageable

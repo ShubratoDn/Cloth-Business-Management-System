@@ -1,7 +1,5 @@
 package com.cloth.business.controllers;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.entities.Purchase;
+import com.cloth.business.entities.enums.PurchaseStatus;
 import com.cloth.business.services.PurchaseServices;
 
 import jakarta.validation.Valid;
@@ -30,7 +29,9 @@ public class PurchaseController {
 
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_CREATE"})
 	@PostMapping
-	public ResponseEntity<?> addPurchase(@Valid @ModelAttribute Purchase purchaseInfo){
+	public ResponseEntity<?> addPurchase(@Valid @ModelAttribute Purchase purchaseInfo){	
+		purchaseInfo.setTimestamp(new Date());
+		purchaseInfo.setPurchaseStatus(PurchaseStatus.OPEN);
 		Purchase purchase = purchaseServices.createPurchase(purchaseInfo);
 		return ResponseEntity.ok(purchase);
 	}
@@ -41,24 +42,26 @@ public class PurchaseController {
 	        @RequestParam(value = "supplierId", required = false) Long supplierId,
 	        @RequestParam(value = "poNumber", required = false) String poNumber,
 	        @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate,
+	        @RequestParam(value = "status", required = false) PurchaseStatus purchaseStatus, // New param
 	        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate,
 	        @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
 	        @RequestParam(value = "size", defaultValue = "5", required = false) int pageSize,
 	        @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
 	        @RequestParam(value = "sortDirection", defaultValue = "desc", required = false) String sortDirection) {
 
-	    // Print values in the console
-	    System.out.println("storeId: " + storeId);
-	    System.out.println("supplierId: " + supplierId);
-	    System.out.println("poNumber: " + poNumber);
-	    System.out.println("fromDate: " + fromDate);
-	    System.out.println("toDate: " + toDate);
-	    System.out.println("pageNumber: " + pageNumber);
-	    System.out.println("pageSize: " + pageSize);
-	    System.out.println("sortBy: " + sortBy);
-	    System.out.println("sortDirection: " + sortDirection);
-	    
-	    return ResponseEntity.ok(purchaseServices.searchPurchase(storeId, supplierId, poNumber, fromDate, toDate, pageNumber, pageSize, sortBy, sortDirection));
+//	    // Print values in the console
+//	    System.out.println("storeId: " + storeId);
+//	    System.out.println("supplierId: " + supplierId);
+//	    System.out.println("poNumber: " + poNumber);
+//        System.out.println("purchaseStatus: " + purchaseStatus); // Print purchaseStatus
+//	    System.out.println("fromDate: " + fromDate);
+//	    System.out.println("toDate: " + toDate);
+//	    System.out.println("pageNumber: " + pageNumber);
+//	    System.out.println("pageSize: " + pageSize);
+//	    System.out.println("sortBy: " + sortBy);
+//	    System.out.println("sortDirection: " + sortDirection);
+//	    
+	    return ResponseEntity.ok(purchaseServices.searchPurchase(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageNumber, pageSize, sortBy, sortDirection));
 	}
 
 	
