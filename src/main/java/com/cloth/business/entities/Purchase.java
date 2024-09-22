@@ -52,5 +52,13 @@ public class Purchase {
     @Enumerated(EnumType.STRING)
     private PurchaseStatus purchaseStatus;
     
+    private User approvedBy;
+    
+    private Date approvedDate;
+    
     private Date timestamp;
+    
+    private User lastUpdatedBy;
+    
+    private Date lastUpdatedDate;
 }

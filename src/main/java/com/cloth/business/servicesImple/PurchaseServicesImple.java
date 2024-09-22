@@ -174,5 +174,10 @@ public class PurchaseServicesImple implements PurchaseServices {
 	}
 	
 	
+	@Override
+	public Purchase getPurchaseInfoByIdAndPO(Long id, String po) {
+		Purchase purchase = purchaseRepository.findByIdAndPoNumber(id, po);
+		return purchase;
+	}
 		
 }

@@ -22,5 +22,7 @@ public interface PurchaseServices {
 		        String sortBy, 
 		        String sortDirection
 		    );
+	  
+	  Purchase getPurchaseInfoByIdAndPO(Long id, String po);
 	
 }

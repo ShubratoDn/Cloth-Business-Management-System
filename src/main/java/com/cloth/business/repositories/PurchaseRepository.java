@@ -32,4 +32,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 	            @Param("toDate") Date toDate,
 	            Pageable pageable
 	    );
+	
+	
+	Purchase findByIdAndPoNumber(Long id, String po);
 }

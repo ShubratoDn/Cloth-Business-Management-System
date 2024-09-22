@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,5 +65,15 @@ public class PurchaseController {
 	    return ResponseEntity.ok(purchaseServices.searchPurchase(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageNumber, pageSize, sortBy, sortDirection));
 	}
 
+	
+	
+	
+	@GetMapping("/{id}/{po}")
+	public ResponseEntity<?> purchaseDetails(@PathVariable(name = "id") Long id, @PathVariable (name = "po") String po){
+		Purchase purchaseInfoByIdAndPO = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
+		return ResponseEntity.ok(purchaseInfoByIdAndPO);
+	}
+	
+	
 	
 }
