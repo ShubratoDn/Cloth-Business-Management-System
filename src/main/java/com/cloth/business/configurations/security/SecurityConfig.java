@@ -3,6 +3,8 @@ package com.cloth.business.configurations.security;
 
 import com.cloth.business.configurations.jwt.JwtAuthenticationEntryPoint;
 import com.cloth.business.configurations.jwt.JwtAuthenticationFilter;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.Md4PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
@@ -80,7 +83,8 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         // Use BCryptPasswordEncoder for secure password encoding
-        return new BCryptPasswordEncoder();
+        return new CustomPasswordEncoder();
+//    	return new BCryptPasswordEncoder();
     }
 
 
@@ -91,6 +95,31 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+    
+    
+    
+    
+
+    public class CustomPasswordEncoder implements PasswordEncoder{
+
+        private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        
+        @Override
+        public String encode(CharSequence rawPassword) {
+        	return bCryptPasswordEncoder.encode(rawPassword);
+//        	return DigestUtils.md5Hex(rawPassword.toString()); 
+        }
+        
+
+        @Override
+        public boolean matches(CharSequence rawPassword, String encodedPassword) {
+            if (DigestUtils.md5Hex(rawPassword.toString()).equals(encodedPassword)) {
+                return true;
+            }
+            return bCryptPasswordEncoder.matches(rawPassword.toString(), encodedPassword);
+        }
+    	
     }
 
 }

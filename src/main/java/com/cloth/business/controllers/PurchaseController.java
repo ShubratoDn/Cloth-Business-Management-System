@@ -73,7 +73,4 @@ public class PurchaseController {
 		Purchase purchaseInfoByIdAndPO = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
 		return ResponseEntity.ok(purchaseInfoByIdAndPO);
 	}
-	
-	
-	
 }
