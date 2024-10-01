@@ -36,6 +36,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GlobalExceptionHandler {
 	
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+		ex.printStackTrace();		
+        ErrorResponse errorResponse = new ErrorResponse(
+            LocalDateTime.now(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "Internal Server Error",
+            ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+	
 	 /**
      * Handles the exception when a method argument type mismatch occurs.
      * Returns a response with a "Bad Request" error message indicating the invalid parameter type.
@@ -259,8 +272,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 	
-	
-	
+		
 	
 	/**
      * Handles the exception when a resource is not found.

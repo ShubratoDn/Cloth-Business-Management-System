@@ -143,6 +143,94 @@ public class PurchaseServicesImple implements PurchaseServices {
 	}
 
 	
+	//update purchase
+	@Override
+	public Purchase updatePurchase(Purchase purchase, Purchase dbPurchase) {
+
+		if (purchase.getStore().getId() != null && purchase.getStore().getId() > 0) {
+			Store store = storeServices.getStoreById(purchase.getStore().getId());
+			dbPurchase.setStore(store);
+		}
+
+		if (purchase.getSupplier().getId() != null && purchase.getSupplier().getId() > 0) {
+			StakeHolder supplier = stakeHolderService.getStakeHolderWithType(purchase.getSupplier().getId(),
+					"supplier");
+			dbPurchase.setSupplier(supplier);
+		}
+
+		List<PurchaseDetails> updatedPurchaseDetails = new ArrayList<>();
+		Double grandTotal = 0.00;
+		for (PurchaseDetails purchaseDetail : purchase.getPurchaseDetails()) {
+			// if the category not found...
+			ProductCategory productCategory = productCategoryRepository
+					.findByName(purchaseDetail.getProduct().getCategory().getName());
+			if (productCategory == null) {
+				Product product = purchaseDetail.getProduct();
+				product.setProductCategory(purchaseDetail.getProduct().getCategory().getName());
+
+				if (purchaseDetail.getProductImage() != null) {
+					product.setProductImage(purchaseDetail.getProductImage());
+				}
+
+				// creating new product
+				Product savedProduct = productService.createProduct(product);
+
+				purchaseDetail.setProduct(savedProduct);
+				log.info("New product created {}", product.getName());
+			} else {
+				Product product = purchaseDetail.getProduct();
+				product.setCategory(productCategory);
+
+				List<Product> byCategoryAndNameAndSize = productRepository.findByCategoryAndNameAndSize(
+						purchaseDetail.getProduct().getCategory(), purchaseDetail.getProduct().getName(),
+						purchaseDetail.getProduct().getSize());
+				if (byCategoryAndNameAndSize.size() != 0 && byCategoryAndNameAndSize.get(0) != null) {
+					purchaseDetail.setProduct(byCategoryAndNameAndSize.get(0));
+
+					// upload the new product image if found
+					if (purchaseDetail.getProductImage() != null) {
+						String uploadProductImage = fileServices.uploadProductImage(purchaseDetail.getProductImage());
+						purchaseDetail.setImage(uploadProductImage);
+					} else {
+						purchaseDetail.setImage(purchaseDetail.getProduct().getImage());
+					}
+
+					log.info("Product already exist {}", product.getName());
+				} else {
+					product.setProductCategory(product.getCategory().getName());
+					if (purchaseDetail.getProductImage() != null) {
+						product.setProductImage(purchaseDetail.getProductImage());
+					}
+
+					// create new product
+					Product savedProduct = productService.createProduct(product);
+					purchaseDetail.setProduct(savedProduct);
+					log.info("New product created {} , Size: {}", product.getName(), product.getSize());
+				}
+			}
+
+			Double total = purchaseDetail.getQuantity() * purchaseDetail.getPrice();
+			grandTotal = grandTotal + (total);
+
+			purchaseDetail.setPurchase(purchase);
+			updatedPurchaseDetails.add(purchaseDetail);
+		}
+
+		purchase.setTotalAmount(grandTotal);
+
+		dbPurchase.setPurchaseDate(purchase.getPurchaseDate());
+		dbPurchase.setPurchaseStatus(purchase.getPurchaseStatus());
+		dbPurchase.setTotalAmount(purchase.getTotalAmount());
+		dbPurchase.setLastUpdatedBy(purchase.getLastUpdatedBy());
+		dbPurchase.setLastUpdatedDate(purchase.getLastUpdatedDate());
+		dbPurchase.setPurchaseDetails(purchase.getPurchaseDetails());
+
+		return purchaseRepository.save(dbPurchase);
+	}
+	
+	
+	
+	
 	//generate PO number
 	public String generatePOnumber(Store store) {
 		long countPurchasesByStore = purchaseRepository.countPurchasesByStore(store.getId());

@@ -44,7 +44,7 @@ public class Purchase {
     @DateTimeFormat(pattern = "yyyy-MM-dd") // Ensure this matches the format you're using in the frontend
     private Date purchaseDate;
 
-    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL)
     private List<PurchaseDetails> purchaseDetails;
 
     private String remark;
@@ -58,7 +58,16 @@ public class Purchase {
     
     private Date timestamp;
     
+    @ManyToOne
     private User lastUpdatedBy;
     
     private Date lastUpdatedDate;
+    
+    @ManyToOne
+    private User rejectedBy;
+    
+    private Date rejectedDate;
+    
+    @Column(length = 3000)
+    private String rejectedNote;
 }

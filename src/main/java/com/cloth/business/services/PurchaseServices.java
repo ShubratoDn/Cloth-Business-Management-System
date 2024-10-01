@@ -10,6 +10,8 @@ public interface PurchaseServices {
 
 	Purchase createPurchase(Purchase purchase);
 	
+	Purchase updatePurchase(Purchase purchase, Purchase dbPurchase);
+	
 	  PageResponse searchPurchase(
 		        Long storeId, 
 		        Long supplierId, 

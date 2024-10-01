@@ -5,20 +5,25 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.entities.Purchase;
+import com.cloth.business.entities.User;
 import com.cloth.business.entities.enums.PurchaseStatus;
+import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.services.PurchaseServices;
 
 import jakarta.validation.Valid;
+import lombok.Builder;
 
 
 @RestController()
@@ -36,6 +41,34 @@ public class PurchaseController {
 		Purchase purchase = purchaseServices.createPurchase(purchaseInfo);
 		return ResponseEntity.ok(purchase);
 	}
+	
+	
+
+	@PutMapping("/{id}/{po}")
+	public ResponseEntity<?> updatePurchase(@PathVariable(name = "id") Long id, @PathVariable (name = "po") String po, @Valid @ModelAttribute Purchase purchaseInfo){
+		Purchase dbPurchaseInfo = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
+		User loggedinUser = HelperUtils.getLoggedinUser();
+		
+		boolean canEdit = false;
+		
+		if(HelperUtils.userHasRole("ROLE_ADMIN") || HelperUtils.userHasRole("ROLE_PURCHASE_UPDATE")) {
+			canEdit = true;
+		}		
+		if((loggedinUser.getId() == dbPurchaseInfo.getAddedBy().getId())) {
+			canEdit = true;
+		}
+		
+		if((dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("OPEN") || dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("REJECTED_MODIFIED"))) {
+			if(canEdit) {
+				purchaseInfo.setLastUpdatedBy(loggedinUser);
+				purchaseInfo.setLastUpdatedDate(new Date());
+				return ResponseEntity.ok(purchaseServices.updatePurchase(purchaseInfo, dbPurchaseInfo));
+			}
+		}
+		throw new RequestRejectedException("Can not edit purchase order!");
+	}
+	
+	
 	
 	@GetMapping("/search")
 	public ResponseEntity<?> searchPurchase(
