@@ -196,4 +196,15 @@ public class FileServicesImple implements FileServices {
 		}
 	}
 
+
+	@Override
+	public void deleteFile(String path) {
+		File file = new File(Constants.RESOURCE_DIRECTORY + File.separator +path);
+        if (file.exists() && file.isFile()) {
+            file.delete();
+			log.info("File deleted successfully: " + path);
+        } else {
+            log.error("File not found to delete: " + path);
+        }
+	}
 }

@@ -11,5 +11,7 @@ public interface FileServices {
 	public String uploadProductImage(MultipartFile imageFile);
 	
 	public String uploadStakeholderImage(MultipartFile imageFile);
+
+	public void deleteFile(String path);;
 	
 }
