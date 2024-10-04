@@ -186,13 +186,16 @@ public class PurchaseServicesImple implements PurchaseServices {
 						purchaseDetail.getProduct().getSize());
 				if (byCategoryAndNameAndSize.size() != 0 && byCategoryAndNameAndSize.get(0) != null) {
 					purchaseDetail.setProduct(byCategoryAndNameAndSize.get(0));
-
 					// upload the new product image if found
 					if (purchaseDetail.getProductImage() != null) {
 						String uploadProductImage = fileServices.uploadProductImage(purchaseDetail.getProductImage());
 						purchaseDetail.setImage(uploadProductImage);
 					} else {
-						purchaseDetail.setImage(purchaseDetail.getProduct().getImage());
+						if(purchaseDetail.getImage() != null){
+							purchaseDetail.setImage(purchaseDetail.getImage());
+						}else{
+							purchaseDetail.setImage(purchaseDetail.getProduct().getImage());
+						}
 					}
 
 					log.info("Product already exist {}", product.getName());
