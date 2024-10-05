@@ -6,14 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.firewall.RequestRejectedException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.entities.Purchase;
@@ -58,7 +51,7 @@ public class PurchaseController {
 			canEdit = true;
 		}
 		
-		if((dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("OPEN") || dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("REJECTED_MODIFIED"))) {
+		if((dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("OPEN") || dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("REJECTED"))) {
 			if(canEdit) {
 				purchaseInfo.setLastUpdatedBy(loggedinUser);
 				purchaseInfo.setLastUpdatedDate(new Date());
@@ -105,5 +98,20 @@ public class PurchaseController {
 	public ResponseEntity<?> purchaseDetails(@PathVariable(name = "id") Long id, @PathVariable (name = "po") String po){
 		Purchase purchaseInfoByIdAndPO = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
 		return ResponseEntity.ok(purchaseInfoByIdAndPO);
+	}
+
+	@PutMapping("/update-purchase-status")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_AUTHORIZATION"})
+	public ResponseEntity<?> updatePurchaseStatus(@RequestBody Purchase purchase){
+		Purchase dbPurchase = purchaseServices.getPurchaseInfoByIdAndPO(purchase.getId(), purchase.getPoNumber());
+		if(HelperUtils.userAssignedThisStore(dbPurchase.getStore())){
+			if(purchase.getPurchaseStatus().equals(PurchaseStatus.REJECTED)){
+				dbPurchase.setRejectedNote(purchase.getRejectedNote());
+			}
+			return ResponseEntity.ok(purchaseServices.updatePurchaseStatus(dbPurchase, purchase.getPurchaseStatus()));
+		}else{
+			throw new RequestRejectedException("Unauthorized to update status of purchase order!");
+		}
+
 	}
 }

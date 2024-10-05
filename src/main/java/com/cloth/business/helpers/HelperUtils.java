@@ -2,6 +2,7 @@ package com.cloth.business.helpers;
 
 import java.util.List;
 
+import com.cloth.business.entities.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -50,5 +51,36 @@ public class HelperUtils {
 			}
 		}
 		return flag;		
+	}
+
+
+	// Method to check if a user has any of the provided stores assigned.
+//	public static boolean userAssignedThisStore(List<Store> stores) {
+//		// Fetch the currently logged-in user's assigned stores
+//		List<Store> loggedInUsersAssignedStore = getLoggedinUser().getAssignedStore();
+//
+//		// Check if any of the provided stores match the user's assigned stores
+//		for (Store store : stores) {
+//			if (loggedInUsersAssignedStore.contains(store)) {
+//				return true; // If a match is found, return true
+//			}
+//		}
+//
+//		return false; // If no match, return false
+//	}
+
+
+	public static boolean userAssignedThisStore(Store store) {
+		// Fetch the currently logged-in user's assigned stores
+		List<Store> loggedInUsersAssignedStore = getLoggedinUser().getAssignedStore();
+
+		// Check if any of the provided stores match the user's assigned stores
+		for (Store userStore : loggedInUsersAssignedStore) {
+			if (userStore.getId() == store.getId()) {
+				return true; // If a match is found, return true
+			}
+		}
+
+		return false; // If no match, return false
 	}
 }

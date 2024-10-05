@@ -51,7 +51,8 @@ public class Purchase {
     
     @Enumerated(EnumType.STRING)
     private PurchaseStatus purchaseStatus;
-    
+
+    @ManyToOne
     private User approvedBy;
     
     private Date approvedDate;

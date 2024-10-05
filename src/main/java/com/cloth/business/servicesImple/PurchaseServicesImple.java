@@ -270,5 +270,30 @@ public class PurchaseServicesImple implements PurchaseServices {
 		Purchase purchase = purchaseRepository.findByIdAndPoNumber(id, po);
 		return purchase;
 	}
-		
+
+
+	@Override
+	public Purchase updatePurchaseStatus(Purchase purchase, PurchaseStatus status) {
+		if(status.equals(PurchaseStatus.APPROVED) ){
+			purchase.setPurchaseStatus(PurchaseStatus.APPROVED);
+			purchase.setApprovedBy(HelperUtils.getLoggedinUser());
+			purchase.setApprovedDate(new Date());
+
+			purchase.setRejectedBy(null);
+			purchase.setRejectedDate(null);
+		}else if(status.equals(PurchaseStatus.REJECTED)){
+			purchase.setRejectedBy(HelperUtils.getLoggedinUser());
+			purchase.setRejectedDate(new Date());
+ 			purchase.setPurchaseStatus(PurchaseStatus.REJECTED);
+
+			purchase.setApprovedBy(null);
+			purchase.setApprovedDate(null);
+
+		} else if (status.equals(PurchaseStatus.CLOSED)) {
+			if(purchase.getPurchaseStatus().equals(PurchaseStatus.APPROVED) || purchase.getPurchaseStatus().equals(PurchaseStatus.REJECTED)) {
+				purchase.setPurchaseStatus(PurchaseStatus.CLOSED);
+			}
+		}
+		return purchaseRepository.save(purchase);
+	}
 }

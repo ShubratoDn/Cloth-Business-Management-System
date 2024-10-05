@@ -26,5 +26,7 @@ public interface PurchaseServices {
 		    );
 	  
 	  Purchase getPurchaseInfoByIdAndPO(Long id, String po);
-	
+
+	  Purchase updatePurchaseStatus(Purchase purchase, PurchaseStatus status);
+
 }
