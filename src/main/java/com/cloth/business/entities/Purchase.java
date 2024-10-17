@@ -39,6 +39,11 @@ public class Purchase {
 
     private Double totalAmount;
 
+    private Double discountAmount;    
+    private String discountRemark;
+
+    private Double chargeAmount;
+    private String chargeRemark;
   
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd") // Ensure this matches the format you're using in the frontend

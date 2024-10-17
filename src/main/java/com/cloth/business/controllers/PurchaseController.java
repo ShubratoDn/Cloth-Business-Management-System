@@ -16,7 +16,6 @@ import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.services.PurchaseServices;
 
 import jakarta.validation.Valid;
-import lombok.Builder;
 
 
 @RestController()
@@ -53,6 +52,11 @@ public class PurchaseController {
 		
 		if((dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("OPEN") || dbPurchaseInfo.getPurchaseStatus().toString().equalsIgnoreCase("REJECTED"))) {
 			if(canEdit) {
+				
+				if(dbPurchaseInfo.getPurchaseStatus() == PurchaseStatus.REJECTED && purchaseInfo.getPurchaseStatus() == PurchaseStatus.SUBMITTED) {
+					purchaseInfo.setPurchaseStatus(PurchaseStatus.REJECTED_MODIFIED);
+				}
+				
 				purchaseInfo.setLastUpdatedBy(loggedinUser);
 				purchaseInfo.setLastUpdatedDate(new Date());
 				return ResponseEntity.ok(purchaseServices.updatePurchase(purchaseInfo, dbPurchaseInfo));
@@ -99,6 +103,14 @@ public class PurchaseController {
 		Purchase purchaseInfoByIdAndPO = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
 		return ResponseEntity.ok(purchaseInfoByIdAndPO);
 	}
+	
+	
+//	Format: V-YYYYMM-XXX
+//
+//	Example: V-202310-001
+//	(V for Voucher, followed by the year and month, then a sequential number)
+
+	
 
 	@PutMapping("/update-purchase-status")
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_AUTHORIZATION"})

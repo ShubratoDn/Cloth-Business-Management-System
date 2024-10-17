@@ -132,7 +132,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				return;
 			}
 		} else {
-			log.error("Username not found from the TOKEN");
+			log.error("Username not found from the TOKEN. Requested URI (" + request.getRequestURI()+ "), REQUESTED URL: "+ request.getRequestURL());
 		}
 
 		filterChain.doFilter(request, response);
