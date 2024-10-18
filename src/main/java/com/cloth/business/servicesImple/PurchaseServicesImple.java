@@ -78,7 +78,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		
 		
 		List<PurchaseDetails> updatedPurchaseDetails = new ArrayList<>();
-		Double grandTotal = 0.00;
+		Double productPriceTotal = 0.00;
 		for(PurchaseDetails purchaseDetail : purchase.getPurchaseDetails()) {			
 			//if the category not found...
 			ProductCategory productCategory = productCategoryRepository.findByName(purchaseDetail.getProduct().getCategory().getName());
@@ -130,12 +130,16 @@ public class PurchaseServicesImple implements PurchaseServices {
 			
 			
 			Double total =  purchaseDetail.getQuantity() * purchaseDetail.getPrice();
-			grandTotal = grandTotal + (total);
+			productPriceTotal = productPriceTotal + (total);
 			
 			
 			purchaseDetail.setPurchase(purchase);			
 			updatedPurchaseDetails.add(purchaseDetail);
 		}
+
+		Double grandTotal = productPriceTotal;
+		grandTotal = purchase.getDiscountAmount() == null ? grandTotal : grandTotal - purchase.getDiscountAmount();
+		grandTotal = purchase.getChargeAmount() == null ? grandTotal : grandTotal + purchase.getChargeAmount();
 
 		purchase.setTotalAmount(grandTotal);
 		purchase.setPoNumber(generatePOnumber(store));
@@ -159,7 +163,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		}
 
 		List<PurchaseDetails> updatedPurchaseDetails = new ArrayList<>();
-		Double grandTotal = 0.00;
+		Double productPriceTotal = 0.00;
 		for (PurchaseDetails purchaseDetail : purchase.getPurchaseDetails()) {
 			// if the category not found...
 			ProductCategory productCategory = productCategoryRepository
@@ -213,13 +217,24 @@ public class PurchaseServicesImple implements PurchaseServices {
 			}
 
 			Double total = purchaseDetail.getQuantity() * purchaseDetail.getPrice();
-			grandTotal = grandTotal + (total);
+			productPriceTotal = productPriceTotal + (total);
 
 			purchaseDetail.setPurchase(purchase);
 			updatedPurchaseDetails.add(purchaseDetail);
 		}
 
+		Double grandTotal = productPriceTotal;
+		grandTotal = purchase.getDiscountAmount() == null ? grandTotal : grandTotal - purchase.getDiscountAmount();
+		grandTotal = purchase.getChargeAmount() == null ? grandTotal : grandTotal + purchase.getChargeAmount();
+
+
 		purchase.setTotalAmount(grandTotal);
+
+
+		dbPurchase.setDiscountAmount(purchase.getDiscountAmount());
+		dbPurchase.setChargeAmount(purchase.getChargeAmount());
+		dbPurchase.setChargeRemark(purchase.getChargeRemark());
+		dbPurchase.setDiscountRemark(purchase.getDiscountRemark());
 
 		dbPurchase.setPurchaseDate(purchase.getPurchaseDate());
 		dbPurchase.setPurchaseStatus(purchase.getPurchaseStatus());
