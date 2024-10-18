@@ -1,5 +1,8 @@
 package com.cloth.business.servicesImple;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -250,14 +253,37 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	
 	//generate PO number
+//	public String generatePOnumber(Store store) {
+//		long countPurchasesByStore = purchaseRepository.countPurchasesByStore(store.getId());
+//
+//		String poNumber = "PO"+store.getId()+"S"+(countPurchasesByStore+1);
+//		return poNumber;
+//	}
+
 	public String generatePOnumber(Store store) {
-		long countPurchasesByStore = purchaseRepository.countPurchasesByStore(store.getId());
-		
-		String poNumber = "PO"+store.getId()+"S"+(countPurchasesByStore+1);
-		return poNumber;
+		Long storeId = store.getId();
+		// Get current date (Year and Month)
+		LocalDate now = LocalDate.now();
+		String year = now.format(DateTimeFormatter.ofPattern("yy"));
+		String month = now.format(DateTimeFormatter.ofPattern("MM"));
+
+		// Calculate the first and last day of the current month
+		LocalDate firstDayOfMonth = now.withDayOfMonth(1);
+		LocalDate lastDayOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+
+		// Convert LocalDate to Date (for JPA query)
+		Date startDate = Date.from(firstDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date endDate = Date.from(lastDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+		// Get count of POs for the current month for the given store
+		int currentMonthCount = purchaseRepository.countByStoreIdAndDateRange(storeId, startDate, endDate);
+
+		// Generate the serial number for the PO
+		String serialNumber = String.format("%04d", currentMonthCount + 1);
+
+		// Build and return the PO number string
+		return String.format("PO-ST%02d-%s%s%s", storeId, year, month, serialNumber);
 	}
-	
-	
 	
 	
 	

@@ -35,4 +35,9 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 	
 	
 	Purchase findByIdAndPoNumber(Long id, String po);
+
+	// Query to count the number of purchase orders for a specific store within a date range
+	@Query("SELECT COUNT(p) FROM Purchase p WHERE p.store.id = :storeId AND p.purchaseDate BETWEEN :startDate AND :endDate")
+	int countByStoreIdAndDateRange(@Param("storeId") Long storeId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 }
