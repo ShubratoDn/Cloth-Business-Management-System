@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Data
 @Entity
 @ToString
@@ -23,10 +25,15 @@ public class Stock {
     @ManyToOne
     private Purchase purchase;
 
+    @ManyToOne
+    private PurchaseDetails purchaseDetasils;
+
     private String location; 
     
     private String remark;
     
     @ManyToOne
     private Store store;
+
+    private Date timestamp;
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.cloth.business.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +30,6 @@ import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.ProductCategoryRepository;
 import com.cloth.business.repositories.ProductRepository;
 import com.cloth.business.repositories.PurchaseRepository;
-import com.cloth.business.services.FileServices;
-import com.cloth.business.services.ProductService;
-import com.cloth.business.services.PurchaseServices;
-import com.cloth.business.services.StakeHolderService;
-import com.cloth.business.services.StoreServices;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,6 +57,9 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	@Autowired
 	private FileServices fileServices;
+
+	@Autowired
+	private StockService stockService;
 	
 	@Override
 	public Purchase createPurchase(Purchase purchase) {
@@ -322,6 +321,9 @@ public class PurchaseServicesImple implements PurchaseServices {
 
 			purchase.setRejectedBy(null);
 			purchase.setRejectedDate(null);
+
+			//UPDATING STOCK
+			stockService.updateStock(purchase);
 		}else if(status.equals(PurchaseStatus.REJECTED)){
 			purchase.setRejectedBy(HelperUtils.getLoggedinUser());
 			purchase.setRejectedDate(new Date());
