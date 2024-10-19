@@ -36,4 +36,14 @@ public class Stock {
     private Store store;
 
     private Date timestamp;
+
+    // Custom constructor for Stock Overview
+    public Stock(Product product, long totalQuantity) {
+        this.product = product;
+        this.quantity = (int) totalQuantity; // Cast long to int for quantity
+    }
+
+    public Stock() {
+
+    }
 }
