@@ -22,6 +22,7 @@ public class StockController {
     @GetMapping("/overview")
     public ResponseEntity<?> stockOverView(
             @RequestParam(name = "storeId", required = false, defaultValue = "") Long storeId,
+            @RequestParam(name = "productId", required = false, defaultValue = "") Long productId,
             @RequestParam(name = "productName", required = false, defaultValue = "") String productName,
 
             @RequestParam(value = "page", defaultValue = "0", required = false) int pageNumber,
@@ -29,6 +30,6 @@ public class StockController {
             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
             @RequestParam(value = "sortDirection", defaultValue = "desc", required = false) String sortDirection
     ){
-        return ResponseEntity.ok(stockService.getStockOverview(storeId, productName, pageNumber, pageSize, sortBy, sortDirection));
+        return ResponseEntity.ok(stockService.getStockOverview(storeId, productId, productName, pageNumber, pageSize, sortBy, sortDirection));
     }
 }

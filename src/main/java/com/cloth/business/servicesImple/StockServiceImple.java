@@ -4,6 +4,7 @@ import com.cloth.business.entities.Product;
 import com.cloth.business.entities.Purchase;
 import com.cloth.business.entities.PurchaseDetails;
 import com.cloth.business.entities.Stock;
+import com.cloth.business.entities.StockOverview;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.StockRepository;
@@ -44,7 +45,7 @@ public class StockServiceImple implements StockService {
     }
 
     @Override
-    public PageResponse getStockOverview(Long storeId, String productName, int page, int size, String sortBy, String sortDirection){
+    public PageResponse getStockOverview(Long storeId, Long productId, String productName, int page, int size, String sortBy, String sortDirection){
 
         Sort sort = null;
         if (sortDirection.equalsIgnoreCase("asc")) {
@@ -53,9 +54,9 @@ public class StockServiceImple implements StockService {
             sort = Sort.by(sortBy).descending();
         }
 
-        Page<Stock> pageInfo;
+        Page<StockOverview> pageInfo;
         Pageable pageable = PageRequest.of(page, size, sort);
-        pageInfo = stockRepository.findStockOverview(storeId, productName, pageable);
+        pageInfo = stockRepository.findStockOverview(storeId, productId, productName, pageable);
         return HelperUtils.pageToPageResponse(pageInfo);
     }
 }

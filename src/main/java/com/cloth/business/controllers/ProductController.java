@@ -33,11 +33,18 @@ public class ProductController {
 		return ResponseEntity.ok(product);
 	}
 
+//	@GetMapping("")
+//	public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
+//		Page<Product> products = productService.getAllProducts(pageable);
+//		return ResponseEntity.ok(products);
+//	}
+//	
+//	
 	@GetMapping("")
-	public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
-		Page<Product> products = productService.getAllProducts(pageable);
-		return ResponseEntity.ok(products);
+	public ResponseEntity<?> getAllProducts() {
+		return ResponseEntity.ok(productService.getAllProductsList());
 	}
+	
 	
 	@GetMapping("/search")
 	public ResponseEntity<?> searchProducts(

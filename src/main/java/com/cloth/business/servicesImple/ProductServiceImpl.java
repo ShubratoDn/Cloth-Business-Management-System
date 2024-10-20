@@ -70,6 +70,11 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
+    
+    @Override
+    public List<Product> getAllProductsList() {
+    	 return productRepository.findAll();
+    }
 
     @Override
     public PageResponse searchProduct(String query, int page, int size, String sortBy, String sortDirection) {
