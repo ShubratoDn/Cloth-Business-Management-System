@@ -27,4 +27,8 @@ public class Constants {
     
     public static final String STAKEHOLDER_IMAGE_UPLOAD_DIRECTORY = "images/stakeholderimages";
     
+    public static final String REPORT_TYPE_PDF="PDF";
+    public static final String REPORT_TYPE_HTML="HTML";
+    public static final String REPORT_TYPE_EXCEL="xl";
+    
 }

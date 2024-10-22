@@ -8,15 +8,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloth.business.configurations.constants.Constants;
 import com.cloth.business.entities.Purchase;
+import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.services.PurchaseServices;
+import com.cloth.business.services.ReportServices;
 
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -32,40 +41,59 @@ public class TestController {
 	@Autowired
 	private PurchaseServices purchaseServices;
 	
-	@GetMapping("/generate-pdf")
-	public ResponseEntity<?> generatePdf(){
-		generateReport2();
-		return ResponseEntity.ok("OK OK");
+	@Autowired
+	private ReportServices reportServices;
+	
+	@GetMapping("/generate-pdf/{id}/{po}")
+	public ResponseEntity<?> getPurchaseReport(@PathVariable Long id, @PathVariable String po) throws Exception {
+		Purchase purchase = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
+
+		byte[] report;
+		
+		if(purchase != null) {
+			report = reportServices.generatePODetails(purchase);
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+purchase.getPoNumber()+".pdf").contentType(MediaType.APPLICATION_PDF).body(report);
+		}else {
+			throw new ResourceNotFoundException("Item not found!");
+		}
 	}
 	
-	
-	public void generateReport2() {
+	public byte[] generateReport2() {
 		Purchase purchaseInfo = purchaseServices.getPurchaseInfoByIdAndPO(4L, "PO8S3");
 		
         try {
-        	File file = ResourceUtils.getFile("classpath:purchase_report.jrxml");
-            // Load the JRXML file
+        	File file = ResourceUtils.getFile("classpath:purchase.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            
             // Create parameters for the main report
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("poNumber", purchaseInfo.getPoNumber());
+            parameters.put("storeName", purchaseInfo.getStore().getStoreName());
+            parameters.put("storeCode", purchaseInfo.getStore().getStoreCode());
+            parameters.put("storeAddress", purchaseInfo.getStore().getAddress());
             
+            parameters.put("supplierName", purchaseInfo.getSupplier().getName());
+            parameters.put("supplierAddress", purchaseInfo.getSupplier().getAddress());
+            parameters.put("supplierPhone", purchaseInfo.getSupplier().getPhone());            
+            parameters.put("supplierEmail", purchaseInfo.getSupplier().getEmail());
             
-            // Prepare the sub-report data source
-            JRBeanCollectionDataSource detailsDataSource = new JRBeanCollectionDataSource(purchaseInfo.getPurchaseDetails());
-            parameters.put("purchaseDetails", detailsDataSource);
+            parameters.put("purchaseDate", purchaseInfo.getPurchaseDate().toString());
             
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, detailsDataSource);
+                        
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
 
             
-	        String tempDir = System.getProperty("java.io.tmpdir");
-	        JasperExportManager.exportReportToHtmlFile(jasperPrint, tempDir + "report.html");
-	        JasperExportManager.exportReportToPdfFile(jasperPrint, tempDir + "report.pdf");
-			
-	        System.out.println(tempDir);
-
+//	        String tempDir = System.getProperty("java.io.tmpdir");
+//	        JasperExportManager.exportReportToHtmlFile(jasperPrint, tempDir + "report.html");
+//	        JasperExportManager.exportReportToPdfFile(jasperPrint, tempDir + "report.pdf");
+//			
+//	        System.out.println(tempDir);
+	     // Export the report to a PDF file (or another format)
+	        return JasperExportManager.exportReportToPdf(jasperPrint);
+	    
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 	

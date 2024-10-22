@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -444,5 +444,31 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+    
+    
+    
+    
+    /**
+     * Handles exceptions related to missing resources.
+     * This method is triggered when a {@link NoResourceFoundException} occurs,
+     * indicating that the requested resource could not be found.
+     *
+     * @param ex the exception indicating that the resource is not found
+     * @return a {@link ResponseEntity} containing an {@link ErrorResponse} with details about the error
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex) {
+        // Create an error response with details about the missing resource
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Resource Not Found",
+                "The requested resource could not be found: " + ex.getMessage()
+        );
+
+        // Return the response with HTTP status 404 (Not Found)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
 
 }
