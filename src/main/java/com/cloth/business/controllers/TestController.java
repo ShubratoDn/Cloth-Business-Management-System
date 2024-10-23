@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.services.PurchaseServices;
 import com.cloth.business.services.ReportServices;
 
+import jakarta.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -45,7 +47,8 @@ public class TestController {
 	private ReportServices reportServices;
 	
 	@GetMapping("/generate-pdf/{id}/{po}")
-	public ResponseEntity<?> getPurchaseReport(@PathVariable Long id, @PathVariable String po) throws Exception {
+	public ResponseEntity<?> getPurchaseReport(@PathVariable Long id, @PathVariable String po, HttpServletRequest req) throws Exception {
+	
 		Purchase purchase = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
 
 		byte[] report;

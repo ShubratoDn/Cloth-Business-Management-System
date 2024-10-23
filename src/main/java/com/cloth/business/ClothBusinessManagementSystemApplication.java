@@ -47,8 +47,8 @@ public class ClothBusinessManagementSystemApplication implements CommandLineRunn
 
     @Override
     public void run(String... args) throws Exception {
-    	List<UserRole> userRoles = UserRolesList.userRoles;
-    	saveAllRoles(userRoles);
+//    	List<UserRole> userRoles = UserRolesList.userRoles;
+//    	saveAllRoles(userRoles);
 
 
 		try {
