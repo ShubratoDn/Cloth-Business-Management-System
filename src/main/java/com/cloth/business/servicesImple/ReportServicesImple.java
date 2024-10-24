@@ -9,9 +9,9 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import com.cloth.business.configurations.constants.Constants;
 import com.cloth.business.entities.Purchase;
 import com.cloth.business.entities.PurchaseDetails;
+import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.ReportProductDetails;
 import com.cloth.business.services.ReportServices;
 
@@ -43,10 +43,20 @@ public class ReportServicesImple implements ReportServices{
             parameters.put("supplierAddress", purchaseInfo.getSupplier().getAddress());
             parameters.put("supplierPhone", purchaseInfo.getSupplier().getPhone());            
             parameters.put("supplierEmail", purchaseInfo.getSupplier().getEmail());
+            parameters.put("supplierImage", HelperUtils.getBaseURL()+"/" + purchaseInfo.getSupplier().getImage());
             
             parameters.put("purchaseDate", purchaseInfo.getPurchaseDate().toString());
-            
-            
+
+            parameters.put("remark", purchaseInfo.getRemark());
+            parameters.put("itemsTotal", purchaseInfo.getTotalAmount() + purchaseInfo.getDiscountAmount() - purchaseInfo.getChargeAmount());
+            parameters.put("discount", purchaseInfo.getDiscountAmount());
+            parameters.put("discountRemark", purchaseInfo.getDiscountRemark());
+            parameters.put("charge", purchaseInfo.getChargeAmount());
+            parameters.put("chargeRemark", purchaseInfo.getChargeRemark());
+            parameters.put("grandTotal", purchaseInfo.getTotalAmount());
+
+
+
             List<ReportProductDetails> purchaseDetails = new ArrayList<>();
             for(PurchaseDetails detail : purchaseInfo.getPurchaseDetails()){
             	ReportProductDetails productDetails = new ReportProductDetails();

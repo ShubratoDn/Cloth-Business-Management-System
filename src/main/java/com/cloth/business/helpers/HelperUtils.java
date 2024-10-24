@@ -5,11 +5,15 @@ import java.util.List;
 import com.cloth.business.entities.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.cloth.business.configurations.security.CustomUserDetails;
 import com.cloth.business.entities.User;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.payloads.PageResponse;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class HelperUtils {
 
@@ -83,4 +87,24 @@ public class HelperUtils {
 
 		return false; // If no match, return false
 	}
+	
+	
+	public static String getBaseURL() {
+        // Get the current HttpServletRequest
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes == null) {
+            return null; // or throw an exception if needed
+        }
+
+        HttpServletRequest request = attributes.getRequest();
+        String scheme = request.getScheme(); // http or https
+        String serverName = request.getServerName(); // localhost or domain
+        int serverPort = request.getServerPort(); // port number
+        String contextPath = request.getContextPath(); // context path
+
+        // Construct the base URL
+        String baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath;
+
+        return baseUrl;
+    }
 }
