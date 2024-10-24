@@ -27,13 +27,18 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 public class ReportServicesImple implements ReportServices{
 
 	@Override
-	public byte[] generatePODetails(Purchase purchaseInfo) {		
-        try {
+	public byte[] generatePODetails(Purchase purchaseInfo) {	
+	
+	    try {
         	File file = ResourceUtils.getFile("classpath:static/reports/pdfTemplates/purchase.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             
             // Create parameters for the main report
             Map<String, Object> parameters = new HashMap<>();
+            
+            File companyLogo = ResourceUtils.getFile("classpath:static/images/logo-single.png");
+            parameters.put("companyLogo", companyLogo.getAbsolutePath());
+            
             parameters.put("poNumber", purchaseInfo.getPoNumber());
             parameters.put("storeName", purchaseInfo.getStore().getStoreName());
             parameters.put("storeCode", purchaseInfo.getStore().getStoreCode());

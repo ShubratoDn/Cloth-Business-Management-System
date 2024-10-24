@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <fontFamily name="Courier New">
+        <normal><![CDATA[fonts/courierNew/cour.ttf]]></normal> 
+        <bold><![CDATA[fonts/courierNew/courbd.ttf]]></bold>
+        <italic><![CDATA[fonts/courierNew/couri.ttf]]></italic>
+        <boldItalic><![CDATA[fonts/courierNew/courbi.ttf]]></boldItalic>
+        <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+    </fontFamily>
+     
+</fontFamilies>

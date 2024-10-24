@@ -103,10 +103,17 @@
 		
 		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
 		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
 			<version>6.21.0</version>
 		</dependency>
+	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
+<dependency>
+    <groupId>net.sf.jasperreports</groupId>
+    <artifactId>jasperreports-fonts</artifactId>
+    <version>6.21.0</version>
+</dependency>
+
 		
 		<dependency>
 			<groupId>org.springdoc</groupId>
