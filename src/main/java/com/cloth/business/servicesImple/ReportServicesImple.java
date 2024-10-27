@@ -11,6 +11,7 @@ import org.springframework.util.ResourceUtils;
 
 import com.cloth.business.entities.Purchase;
 import com.cloth.business.entities.PurchaseDetails;
+import com.cloth.business.entities.enums.PurchaseStatus;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.ReportProductDetails;
 import com.cloth.business.services.ReportServices;
@@ -39,6 +40,14 @@ public class ReportServicesImple implements ReportServices{
             File companyLogo = ResourceUtils.getFile("classpath:static/images/logo-single.png");
             parameters.put("companyLogo", companyLogo.getAbsolutePath());
             
+            if(purchaseInfo.getPurchaseStatus().equals(PurchaseStatus.APPROVED)) {
+                parameters.put("watermarkText", "Original Copy");	
+            }else if(purchaseInfo.getPurchaseStatus().equals(PurchaseStatus.CLOSED)) {
+                parameters.put("watermarkText", "File Closed");	
+            }else {
+            	parameters.put("watermarkText", "Preview Only");
+            }
+            
             parameters.put("poNumber", purchaseInfo.getPoNumber());
             parameters.put("storeName", purchaseInfo.getStore().getStoreName());
             parameters.put("storeCode", purchaseInfo.getStore().getStoreCode());
@@ -52,11 +61,11 @@ public class ReportServicesImple implements ReportServices{
             
             parameters.put("purchaseDate", purchaseInfo.getPurchaseDate().toString());
 
-            parameters.put("remark", purchaseInfo.getRemark());
-            parameters.put("itemsTotal", purchaseInfo.getTotalAmount() + purchaseInfo.getDiscountAmount() - purchaseInfo.getChargeAmount());
-            parameters.put("discount", purchaseInfo.getDiscountAmount());
+            parameters.put("remark", purchaseInfo.getRemark() != null ? purchaseInfo.getRemark() : "");
+            parameters.put("itemsTotal", purchaseInfo.getTotalAmount() + (purchaseInfo.getDiscountAmount() == null ? 0.00 : purchaseInfo.getDiscountAmount()) - (purchaseInfo.getChargeAmount() == null ? 0.00 : purchaseInfo.getChargeAmount()));
+            parameters.put("discount", (purchaseInfo.getDiscountAmount() == null ? 0.00 : purchaseInfo.getDiscountAmount()));
             parameters.put("discountRemark", purchaseInfo.getDiscountRemark());
-            parameters.put("charge", purchaseInfo.getChargeAmount());
+            parameters.put("charge",(purchaseInfo.getChargeAmount() == null ? 0.00 : purchaseInfo.getChargeAmount()));
             parameters.put("chargeRemark", purchaseInfo.getChargeRemark());
             parameters.put("grandTotal", purchaseInfo.getTotalAmount());
 

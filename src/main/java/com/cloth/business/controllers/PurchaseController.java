@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,12 @@ import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.entities.Purchase;
 import com.cloth.business.entities.User;
 import com.cloth.business.entities.enums.PurchaseStatus;
+import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.services.PurchaseServices;
+import com.cloth.business.services.ReportServices;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 
@@ -25,6 +30,9 @@ public class PurchaseController {
 	@Autowired
 	private PurchaseServices purchaseServices;
 
+	@Autowired
+	private ReportServices reportServices; 
+	
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_CREATE"})
 	@PostMapping
 	public ResponseEntity<?> addPurchase(@Valid @ModelAttribute Purchase purchaseInfo){	
@@ -104,13 +112,6 @@ public class PurchaseController {
 		return ResponseEntity.ok(purchaseInfoByIdAndPO);
 	}
 	
-	
-//	Format: V-YYYYMM-XXX
-//
-//	Example: V-202310-001
-//	(V for Voucher, followed by the year and month, then a sequential number)
-
-	
 
 	@PutMapping("/update-purchase-status")
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_AUTHORIZATION"})
@@ -125,5 +126,21 @@ public class PurchaseController {
 			throw new RequestRejectedException("Unauthorized to update status of purchase order!");
 		}
 
+	}
+	
+	
+	@GetMapping("/generate-pdf/{id}/{po}")
+	public ResponseEntity<?> getPurchaseReport(@PathVariable Long id, @PathVariable String po, HttpServletRequest req) throws Exception {
+	
+		Purchase purchase = purchaseServices.getPurchaseInfoByIdAndPO(id, po);
+
+		byte[] report;
+		
+		if(purchase != null) {
+			report = reportServices.generatePODetails(purchase);
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+purchase.getPoNumber()+".pdf").contentType(MediaType.APPLICATION_PDF).body(report);
+		}else {
+			throw new ResourceNotFoundException("Item not found!");
+		}
 	}
 }

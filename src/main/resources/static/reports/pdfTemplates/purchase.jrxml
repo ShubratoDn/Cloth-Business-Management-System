@@ -68,11 +68,31 @@
 	<parameter name="charge" class="java.lang.Double"/>
 	<parameter name="grandTotal" class="java.lang.Double"/>
 	<parameter name="companyLogo" class="java.lang.String"/>
+	<parameter name="watermarkText" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
 	<background>
-		<band splitType="Stretch"/>
+		<band height="802" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<image>
+				<reportElement x="233" y="327" width="88" height="89" uuid="51066b9b-b178-47f7-90a7-282cdda17778"/>
+				<imageExpression><![CDATA[$P{companyLogo}]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="230" y="327" width="94" height="100" backcolor="rgba(255, 255, 255, 0.69411767)" uuid="7646f8d8-f70e-4f9c-82a3-1e5bdf0359eb"/>
+				<graphicElement>
+					<pen lineColor="rgba(0, 0, 0, 0.0)"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="65" y="407" width="424" height="64" forecolor="rgba(3, 3, 3, 0.078431375)" uuid="e111fdb4-f1a4-4809-a8e3-39d6c67d2533"/>
+				<textElement rotation="None" markup="html">
+					<font fontName="Courier New" size="53" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{watermarkText}]]></textFieldExpression>
+			</textField>
+		</band>
 	</background>
 	<title>
 		<band height="242" splitType="Stretch">
@@ -556,7 +576,7 @@
 				</textElement>
 				<text><![CDATA[SUB TOTAL :]]></text>
 			</staticText>
-			<textField textAdjust="ScaleFont">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="435" y="41" width="106" height="30" uuid="45d6debe-c9a3-4f18-a4f0-c51204a16990">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -584,7 +604,7 @@
 				</textElement>
 				<text><![CDATA[DISCOUNT :]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="435" y="71" width="106" height="30" uuid="cf5c78ee-c886-46ff-8760-df187fb3dfa6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
