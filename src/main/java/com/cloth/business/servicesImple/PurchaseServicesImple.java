@@ -233,6 +233,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		purchase.setTotalAmount(grandTotal);
 
 
+		dbPurchase.setRemark(purchase.getRemark());
 		dbPurchase.setDiscountAmount(purchase.getDiscountAmount() != null ? purchase.getDiscountAmount() : 0);
 		dbPurchase.setChargeAmount(purchase.getChargeAmount() != null ? purchase.getChargeAmount() : 0);
 		dbPurchase.setChargeRemark(purchase.getChargeRemark());

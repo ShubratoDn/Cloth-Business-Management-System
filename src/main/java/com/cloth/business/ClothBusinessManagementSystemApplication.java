@@ -1,8 +1,10 @@
 package com.cloth.business;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -17,11 +19,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
+import com.cloth.business.configurations.constants.Constants;
 import com.cloth.business.configurations.constants.UserRolesList;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceAlreadyExistsException;
 import com.cloth.business.repositories.UserRoleRepository;
 import com.cloth.business.services.UserRoleServices;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 
 import io.lettuce.core.models.role.RedisInstance.Role;
 import lombok.extern.slf4j.Slf4j;
@@ -96,6 +104,19 @@ public class ClothBusinessManagementSystemApplication implements CommandLineRunn
 		
 		return roleList;
 		
+	}
+	
+	public void generateQRcode() {
+		String data ="https://scanqr.org/#scan";
+		String filePath = Constants.RESOURCE_DIRECTORY + "qr.jpg";
+		
+		try {
+			BitMatrix matrix = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, 500, 500);
+			MatrixToImageWriter.writeToPath(matrix, "jpg", Paths.get(filePath));
+		} catch (WriterException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

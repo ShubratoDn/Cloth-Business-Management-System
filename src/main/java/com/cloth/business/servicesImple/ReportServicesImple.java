@@ -48,6 +48,9 @@ public class ReportServicesImple implements ReportServices{
             	parameters.put("watermarkText", "Preview Only");
             }
             
+            parameters.put("qrCodeText", "PO number : "+purchaseInfo.getPoNumber());
+//            "Purchase Order Info\n"+$P{qrCodeText} + "\nPurchase Date : " +$P{purchaseDate} +"\nStore Name : "+$P{storeName}+"\nSupplier Name: "+$P{supplierName},
+
             parameters.put("poNumber", purchaseInfo.getPoNumber());
             parameters.put("storeName", purchaseInfo.getStore().getStoreName());
             parameters.put("storeCode", purchaseInfo.getStore().getStoreCode());
@@ -64,9 +67,9 @@ public class ReportServicesImple implements ReportServices{
             parameters.put("remark", purchaseInfo.getRemark() != null ? purchaseInfo.getRemark() : "");
             parameters.put("itemsTotal", purchaseInfo.getTotalAmount() + (purchaseInfo.getDiscountAmount() == null ? 0.00 : purchaseInfo.getDiscountAmount()) - (purchaseInfo.getChargeAmount() == null ? 0.00 : purchaseInfo.getChargeAmount()));
             parameters.put("discount", (purchaseInfo.getDiscountAmount() == null ? 0.00 : purchaseInfo.getDiscountAmount()));
-            parameters.put("discountRemark", purchaseInfo.getDiscountRemark());
+            parameters.put("discountRemark", "( "+purchaseInfo.getDiscountRemark()+" )");
             parameters.put("charge",(purchaseInfo.getChargeAmount() == null ? 0.00 : purchaseInfo.getChargeAmount()));
-            parameters.put("chargeRemark", purchaseInfo.getChargeRemark());
+            parameters.put("chargeRemark", "( "+purchaseInfo.getChargeRemark()+" )");
             parameters.put("grandTotal", purchaseInfo.getTotalAmount());
 
 
