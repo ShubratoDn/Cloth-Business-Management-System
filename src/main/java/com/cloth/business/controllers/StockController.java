@@ -1,15 +1,15 @@
 package com.cloth.business.controllers;
 
-import com.cloth.business.entities.Stock;
+
 import com.cloth.business.services.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 //@RequestMapping("/api/v1/stocks")
@@ -31,5 +31,11 @@ public class StockController {
             @RequestParam(value = "sortDirection", defaultValue = "desc", required = false) String sortDirection
     ){
         return ResponseEntity.ok(stockService.getStockOverview(storeId, productId, productName, pageNumber, pageSize, sortBy, sortDirection));
+    }
+    
+    
+    @GetMapping("/store/{storeId}")
+    public ResponseEntity<?> stockOverViewByStore(@PathVariable Long storeId){
+        return ResponseEntity.ok(stockService.getStockOverviewByStore(storeId));
     }
 }

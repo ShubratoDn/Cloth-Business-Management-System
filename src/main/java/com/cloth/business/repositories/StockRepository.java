@@ -4,6 +4,9 @@ import com.cloth.business.entities.Stock;
 import com.cloth.business.entities.StockOverview;
 
 import io.lettuce.core.dynamic.annotation.Param;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +35,10 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 	                                      @Param("productName") String productName, 
 	                                      Pageable pageable);
 
+	
+	@Query("SELECT new com.cloth.business.entities.StockOverview(s.product, SUM(s.quantity), s.store) " +
+		       "FROM Stock s " +
+		       "WHERE (:storeId IS NULL OR s.store.id = :storeId) "+
+		       "GROUP BY s.product, s.store")
+	List<StockOverview> findStockOverviewByStore(@Param("storeId") Long storeId);
 }

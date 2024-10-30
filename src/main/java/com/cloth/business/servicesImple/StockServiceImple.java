@@ -59,4 +59,10 @@ public class StockServiceImple implements StockService {
         pageInfo = stockRepository.findStockOverview(storeId, productId, productName, pageable);
         return HelperUtils.pageToPageResponse(pageInfo);
     }
+    
+    @Override
+    public List<StockOverview> getStockOverviewByStore(Long storeId) {
+    	List<StockOverview> stockOverviewByStore = stockRepository.findStockOverviewByStore(storeId);
+    	return stockOverviewByStore;
+    }
 }
