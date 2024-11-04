@@ -1,8 +1,8 @@
 package com.cloth.business.servicesImple;
 
 import com.cloth.business.entities.Product;
-import com.cloth.business.entities.Purchase;
-import com.cloth.business.entities.PurchaseDetails;
+import com.cloth.business.entities.TradeTransaction;
+import com.cloth.business.entities.TradeTransactionDetails;
 import com.cloth.business.entities.Stock;
 import com.cloth.business.entities.StockOverview;
 import com.cloth.business.helpers.HelperUtils;
@@ -27,9 +27,9 @@ public class StockServiceImple implements StockService {
     private StockRepository stockRepository;
 
     @Override
-    public List<Stock> updateStock(Purchase purchase) {
+    public List<Stock> updateStock(TradeTransaction purchase) {
         List<Stock> stockList = new ArrayList<>();
-        for(PurchaseDetails purchaseDetail : purchase.getPurchaseDetails()){
+        for(TradeTransactionDetails purchaseDetail : purchase.getTransactionDetails()){
             Stock stock = new Stock();
             stock.setLocation(purchase.getStore().getAddress());
             stock.setProduct(purchaseDetail.getProduct());

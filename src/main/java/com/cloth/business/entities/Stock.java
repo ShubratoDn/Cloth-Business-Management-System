@@ -23,10 +23,10 @@ public class Stock {
     private int quantity;
     
     @ManyToOne
-    private Purchase purchase;
+    private TradeTransaction purchase;
 
     @ManyToOne
-    private PurchaseDetails purchaseDetasils;
+    private TradeTransactionDetails purchaseDetasils;
 
     private String location; 
     

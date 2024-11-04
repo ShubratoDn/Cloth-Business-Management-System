@@ -15,7 +15,7 @@ import lombok.ToString;
 @Data
 @Entity
 @ToString
-public class PurchaseDetails {
+public class TradeTransactionDetails { // Changed class name from PurchaseDetails to TradeTransactionDetails
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,21 +52,18 @@ public class PurchaseDetails {
         this.productImage = productImage;
     }
     
-
     @ManyToOne
-    @JoinColumn(name = "purchase_id", nullable = false)
+    @JoinColumn(name = "trade_transaction_id", nullable = false) // Changed from purchase_id to trade_transaction_id
     @ToString.Exclude
-    private Purchase purchase;
+    private TradeTransaction tradeTransaction; // Changed type from Purchase to TradeTransaction
 
     @JsonIgnore
-	public Purchase getPurchase() {
-		return purchase;
-	}
+    public TradeTransaction getTradeTransaction() { // Changed method to return TradeTransaction
+        return tradeTransaction;
+    }
 
     @JsonProperty
-	public void setPurchase(Purchase purchase) {
-		this.purchase = purchase;
-	}
-    
-    
+    public void setTradeTransaction(TradeTransaction tradeTransaction) { // Changed parameter type to TradeTransaction
+        this.tradeTransaction = tradeTransaction;
+    }
 }

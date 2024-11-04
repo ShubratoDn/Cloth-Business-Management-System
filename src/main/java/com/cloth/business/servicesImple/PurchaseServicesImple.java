@@ -19,12 +19,12 @@ import org.springframework.stereotype.Service;
 import com.cloth.business.configurations.security.CustomUserDetails;
 import com.cloth.business.entities.Product;
 import com.cloth.business.entities.ProductCategory;
-import com.cloth.business.entities.Purchase;
-import com.cloth.business.entities.PurchaseDetails;
+import com.cloth.business.entities.TradeTransaction;
+import com.cloth.business.entities.TradeTransactionDetails;
 import com.cloth.business.entities.StakeHolder;
 import com.cloth.business.entities.Store;
 import com.cloth.business.entities.User;
-import com.cloth.business.entities.enums.PurchaseStatus;
+import com.cloth.business.entities.enums.TransactionStatus;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.ProductCategoryRepository;
@@ -62,7 +62,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 	private StockService stockService;
 	
 	@Override
-	public Purchase createPurchase(Purchase purchase) {
+	public TradeTransaction createPurchase(TradeTransaction purchase) {
 		
 		//getting the logged in user
 		CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
@@ -70,18 +70,18 @@ public class PurchaseServicesImple implements PurchaseServices {
 		User loggedInUser = customUserDetails.getLoggedInUser();
 		
 		Store store = storeServices.getStoreById(purchase.getStore().getId());
-		StakeHolder supplier = stakeHolderService.getStakeHolderWithType(purchase.getSupplier().getId(), "supplier");
+		StakeHolder supplier = stakeHolderService.getStakeHolderWithType(purchase.getPartner().getId(), "supplier");
 		
 		
 		
-		purchase.setAddedBy(loggedInUser);
+		purchase.setProcessedBy(loggedInUser);
 		purchase.setStore(store);
-		purchase.setSupplier(supplier);
+		purchase.setPartner(supplier);
 		
 		
-		List<PurchaseDetails> updatedPurchaseDetails = new ArrayList<>();
+		List<TradeTransactionDetails> updatedPurchaseDetails = new ArrayList<>();
 		Double productPriceTotal = 0.00;
-		for(PurchaseDetails purchaseDetail : purchase.getPurchaseDetails()) {			
+		for(TradeTransactionDetails purchaseDetail : purchase.getTransactionDetails()) {			
 			//if the category not found...
 			ProductCategory productCategory = productCategoryRepository.findByName(purchaseDetail.getProduct().getCategory().getName());
 			if(productCategory == null) {
@@ -135,7 +135,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 			productPriceTotal = productPriceTotal + (total);
 			
 			
-			purchaseDetail.setPurchase(purchase);			
+			purchaseDetail.setTradeTransaction(purchase);			
 			updatedPurchaseDetails.add(purchaseDetail);
 		}
 
@@ -144,29 +144,29 @@ public class PurchaseServicesImple implements PurchaseServices {
 		grandTotal = purchase.getChargeAmount() == null ? grandTotal : grandTotal + purchase.getChargeAmount();
 
 		purchase.setTotalAmount(grandTotal);
-		purchase.setPoNumber(generatePOnumber(store));
+		purchase.setTransactionNumber(generatePOnumber(store));
 		return purchaseRepository.save(purchase);
 	}
 
 	
 	//update purchase
 	@Override
-	public Purchase updatePurchase(Purchase purchase, Purchase dbPurchase) {
+	public TradeTransaction updatePurchase(TradeTransaction purchase, TradeTransaction dbPurchase) {
 
 		if (purchase.getStore().getId() != null && purchase.getStore().getId() > 0) {
 			Store store = storeServices.getStoreById(purchase.getStore().getId());
 			dbPurchase.setStore(store);
 		}
 
-		if (purchase.getSupplier().getId() != null && purchase.getSupplier().getId() > 0) {
-			StakeHolder supplier = stakeHolderService.getStakeHolderWithType(purchase.getSupplier().getId(),
+		if (purchase.getPartner().getId() != null && purchase.getPartner().getId() > 0) {
+			StakeHolder supplier = stakeHolderService.getStakeHolderWithType(purchase.getPartner().getId(),
 					"supplier");
-			dbPurchase.setSupplier(supplier);
+			dbPurchase.setPartner(supplier);
 		}
 
-		List<PurchaseDetails> updatedPurchaseDetails = new ArrayList<>();
+		List<TradeTransactionDetails> updatedPurchaseDetails = new ArrayList<>();
 		Double productPriceTotal = 0.00;
-		for (PurchaseDetails purchaseDetail : purchase.getPurchaseDetails()) {
+		for (TradeTransactionDetails purchaseDetail : purchase.getTransactionDetails()) {
 			// if the category not found...
 			ProductCategory productCategory = productCategoryRepository
 					.findByName(purchaseDetail.getProduct().getCategory().getName());
@@ -221,7 +221,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 			Double total = purchaseDetail.getQuantity() * purchaseDetail.getPrice();
 			productPriceTotal = productPriceTotal + (total);
 
-			purchaseDetail.setPurchase(purchase);
+			purchaseDetail.setTradeTransaction(purchase);
 			updatedPurchaseDetails.add(purchaseDetail);
 		}
 
@@ -239,12 +239,12 @@ public class PurchaseServicesImple implements PurchaseServices {
 		dbPurchase.setChargeRemark(purchase.getChargeRemark());
 		dbPurchase.setDiscountRemark(purchase.getDiscountRemark());
 
-		dbPurchase.setPurchaseDate(purchase.getPurchaseDate());
-		dbPurchase.setPurchaseStatus(purchase.getPurchaseStatus());
+		dbPurchase.setTransactionDate(purchase.getTransactionDate());
+		dbPurchase.setTransactionStatus(purchase.getTransactionStatus());
 		dbPurchase.setTotalAmount(purchase.getTotalAmount());
 		dbPurchase.setLastUpdatedBy(purchase.getLastUpdatedBy());
 		dbPurchase.setLastUpdatedDate(purchase.getLastUpdatedDate());
-		dbPurchase.setPurchaseDetails(purchase.getPurchaseDetails());
+		dbPurchase.setTransactionDetails(purchase.getTransactionDetails());
 
 		return purchaseRepository.save(dbPurchase);
 	}
@@ -289,7 +289,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	
 	@Override
-	public PageResponse searchPurchase(Long storeId, Long supplierId, String poNumber, PurchaseStatus purchaseStatus, Date fromDate, Date toDate, int page, int size, String sortBy, String sortDirection) {
+	public PageResponse searchPurchase(Long storeId, Long supplierId, String poNumber, TransactionStatus purchaseStatus, Date fromDate, Date toDate, int page, int size, String sortBy, String sortDirection) {
 
 		Sort sort = null;
 		if (sortDirection.equalsIgnoreCase("asc")) {
@@ -298,7 +298,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 			sort = Sort.by(sortBy).descending();
 		}
 		
-		Page<Purchase> pageInfo;
+		Page<TradeTransaction> pageInfo;
 		
 		Pageable pageable = PageRequest.of(page, size, sort);
 		pageInfo = purchaseRepository.searchPurchases(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageable);
@@ -307,16 +307,16 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	
 	@Override
-	public Purchase getPurchaseInfoByIdAndPO(Long id, String po) {
-		Purchase purchase = purchaseRepository.findByIdAndPoNumber(id, po);
+	public TradeTransaction getPurchaseInfoByIdAndPO(Long id, String po) {
+		TradeTransaction purchase = purchaseRepository.findByIdAndPoNumber(id, po);
 		return purchase;
 	}
 
 
 	@Override
-	public Purchase updatePurchaseStatus(Purchase purchase, PurchaseStatus status) {
-		if(status.equals(PurchaseStatus.APPROVED) ){
-			purchase.setPurchaseStatus(PurchaseStatus.APPROVED);
+	public TradeTransaction updatePurchaseStatus(TradeTransaction purchase, TransactionStatus status) {
+		if(status.equals(TransactionStatus.APPROVED) ){
+			purchase.setTransactionStatus(TransactionStatus.APPROVED);
 			purchase.setApprovedBy(HelperUtils.getLoggedinUser());
 			purchase.setApprovedDate(new Date());
 
@@ -325,17 +325,17 @@ public class PurchaseServicesImple implements PurchaseServices {
 
 			//UPDATING STOCK
 			stockService.updateStock(purchase);
-		}else if(status.equals(PurchaseStatus.REJECTED)){
+		}else if(status.equals(TransactionStatus.REJECTED)){
 			purchase.setRejectedBy(HelperUtils.getLoggedinUser());
 			purchase.setRejectedDate(new Date());
- 			purchase.setPurchaseStatus(PurchaseStatus.REJECTED);
+ 			purchase.setTransactionStatus(TransactionStatus.REJECTED);
 
 			purchase.setApprovedBy(null);
 			purchase.setApprovedDate(null);
 
-		} else if (status.equals(PurchaseStatus.CLOSED)) {
-			if(purchase.getPurchaseStatus().equals(PurchaseStatus.APPROVED) || purchase.getPurchaseStatus().equals(PurchaseStatus.REJECTED)) {
-				purchase.setPurchaseStatus(PurchaseStatus.CLOSED);
+		} else if (status.equals(TransactionStatus.CLOSED)) {
+			if(purchase.getTransactionStatus().equals(TransactionStatus.APPROVED) || purchase.getTransactionStatus().equals(TransactionStatus.REJECTED)) {
+				purchase.setTransactionStatus(TransactionStatus.CLOSED);
 			}
 		}
 		return purchaseRepository.save(purchase);

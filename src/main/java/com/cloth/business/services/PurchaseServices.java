@@ -2,21 +2,21 @@ package com.cloth.business.services;
 
 import java.util.Date;
 
-import com.cloth.business.entities.Purchase;
-import com.cloth.business.entities.enums.PurchaseStatus;
+import com.cloth.business.entities.TradeTransaction;
+import com.cloth.business.entities.enums.TransactionStatus;
 import com.cloth.business.payloads.PageResponse;
 
 public interface PurchaseServices {
 
-	Purchase createPurchase(Purchase purchase);
+	TradeTransaction createPurchase(TradeTransaction purchase);
 	
-	Purchase updatePurchase(Purchase purchase, Purchase dbPurchase);
+	TradeTransaction updatePurchase(TradeTransaction purchase, TradeTransaction dbPurchase);
 	
 	  PageResponse searchPurchase(
 		        Long storeId, 
 		        Long supplierId, 
 		        String poNumber, 
-		        PurchaseStatus purchaseStatus,
+		        TransactionStatus purchaseStatus,
 		        Date fromDate, 
 		        Date toDate, 
 		        int page, 
@@ -25,8 +25,8 @@ public interface PurchaseServices {
 		        String sortDirection
 		    );
 	  
-	  Purchase getPurchaseInfoByIdAndPO(Long id, String po);
+	  TradeTransaction getPurchaseInfoByIdAndPO(Long id, String po);
 
-	  Purchase updatePurchaseStatus(Purchase purchase, PurchaseStatus status);
+	  TradeTransaction updatePurchaseStatus(TradeTransaction purchase, TransactionStatus status);
 
 }

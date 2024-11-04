@@ -9,9 +9,9 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import com.cloth.business.entities.Purchase;
-import com.cloth.business.entities.PurchaseDetails;
-import com.cloth.business.entities.enums.PurchaseStatus;
+import com.cloth.business.entities.TradeTransaction;
+import com.cloth.business.entities.TradeTransactionDetails;
+import com.cloth.business.entities.enums.TransactionStatus;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.ReportProductDetails;
 import com.cloth.business.services.ReportServices;
@@ -28,7 +28,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 public class ReportServicesImple implements ReportServices{
 
 	@Override
-	public byte[] generatePODetails(Purchase purchaseInfo) {	
+	public byte[] generatePODetails(TradeTransaction purchaseInfo) {	
 	
 	    try {
         	File file = ResourceUtils.getFile("classpath:static/reports/pdfTemplates/purchase.jrxml");
@@ -40,29 +40,29 @@ public class ReportServicesImple implements ReportServices{
             File companyLogo = ResourceUtils.getFile("classpath:static/images/logo-single.png");
             parameters.put("companyLogo", companyLogo.getAbsolutePath());
             
-            if(purchaseInfo.getPurchaseStatus().equals(PurchaseStatus.APPROVED)) {
+            if(purchaseInfo.getTransactionStatus().equals(TransactionStatus.APPROVED)) {
                 parameters.put("watermarkText", "Original Copy");	
-            }else if(purchaseInfo.getPurchaseStatus().equals(PurchaseStatus.CLOSED)) {
+            }else if(purchaseInfo.getTransactionStatus().equals(TransactionStatus.CLOSED)) {
                 parameters.put("watermarkText", "File Closed");	
             }else {
             	parameters.put("watermarkText", "Preview Only");
             }
             
-            parameters.put("qrCodeText", "PO number : "+purchaseInfo.getPoNumber());
+            parameters.put("qrCodeText", "PO number : "+purchaseInfo.getTransactionNumber());
 //            "Purchase Order Info\n"+$P{qrCodeText} + "\nPurchase Date : " +$P{purchaseDate} +"\nStore Name : "+$P{storeName}+"\nSupplier Name: "+$P{supplierName},
 
-            parameters.put("poNumber", purchaseInfo.getPoNumber());
+            parameters.put("poNumber", purchaseInfo.getTransactionNumber());
             parameters.put("storeName", purchaseInfo.getStore().getStoreName());
             parameters.put("storeCode", purchaseInfo.getStore().getStoreCode());
             parameters.put("storeAddress", purchaseInfo.getStore().getAddress());
             
-            parameters.put("supplierName", purchaseInfo.getSupplier().getName());
-            parameters.put("supplierAddress", purchaseInfo.getSupplier().getAddress());
-            parameters.put("supplierPhone", purchaseInfo.getSupplier().getPhone());            
-            parameters.put("supplierEmail", purchaseInfo.getSupplier().getEmail());
-            parameters.put("supplierImage", HelperUtils.getBaseURL()+"/" + purchaseInfo.getSupplier().getImage());
+            parameters.put("supplierName", purchaseInfo.getPartner().getName());
+            parameters.put("supplierAddress", purchaseInfo.getPartner().getAddress());
+            parameters.put("supplierPhone", purchaseInfo.getPartner().getPhone());            
+            parameters.put("supplierEmail", purchaseInfo.getPartner().getEmail());
+            parameters.put("supplierImage", HelperUtils.getBaseURL()+"/" + purchaseInfo.getPartner().getImage());
             
-            parameters.put("purchaseDate", purchaseInfo.getPurchaseDate().toString());
+            parameters.put("purchaseDate", purchaseInfo.getTransactionDate().toString());
 
             parameters.put("remark", purchaseInfo.getRemark() != null ? purchaseInfo.getRemark() : "");
             parameters.put("itemsTotal", purchaseInfo.getTotalAmount() + (purchaseInfo.getDiscountAmount() == null ? 0.00 : purchaseInfo.getDiscountAmount()) - (purchaseInfo.getChargeAmount() == null ? 0.00 : purchaseInfo.getChargeAmount()));
@@ -75,7 +75,7 @@ public class ReportServicesImple implements ReportServices{
 
 
             List<ReportProductDetails> purchaseDetails = new ArrayList<>();
-            for(PurchaseDetails detail : purchaseInfo.getPurchaseDetails()){
+            for(TradeTransactionDetails detail : purchaseInfo.getTransactionDetails()){
             	ReportProductDetails productDetails = new ReportProductDetails();
             	productDetails.setItemId(detail.getId());
             	productDetails.setItemName(detail.getProduct().getName());

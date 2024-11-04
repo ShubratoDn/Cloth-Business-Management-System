@@ -1,6 +1,6 @@
 package com.cloth.business.entities.enums;
 
-public enum PurchaseStatus {
+public enum TransactionStatus {
 	OPEN,
 	SUBMITTED,
 	APPROVED,

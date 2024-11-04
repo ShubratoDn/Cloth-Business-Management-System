@@ -1,9 +1,9 @@
 package com.cloth.business.services;
 
-import com.cloth.business.entities.Purchase;
+import com.cloth.business.entities.TradeTransaction;
 
 public interface ReportServices {
 	
-	public byte[] generatePODetails(Purchase purchase);
+	public byte[] generatePODetails(TradeTransaction purchase);
 
 }
