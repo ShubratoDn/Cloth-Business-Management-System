@@ -11,22 +11,22 @@ import org.springframework.data.repository.query.Param;
 import com.cloth.business.entities.TradeTransaction;
 import com.cloth.business.entities.enums.TransactionStatus;
 
-public interface PurchaseRepository extends JpaRepository<TradeTransaction, Long> {
-	@Query("SELECT COUNT(p) FROM Purchase p WHERE p.store.id = :storeId")
+public interface TransactionRepository extends JpaRepository<TradeTransaction, Long> {
+	@Query("SELECT COUNT(p) FROM TradeTransaction p WHERE p.store.id = :storeId")
 	long countPurchasesByStore(@Param("storeId") Long storeId);
 	
 	
-	@Query("SELECT p FROM Purchase p WHERE " +
-	           "(:storeId IS NULL OR p.store.id = :storeId) AND " +
-	           "(:supplierId IS NULL OR p.supplier.id = :supplierId) AND " +
-	           "(:poNumber IS NULL OR p.poNumber LIKE %:poNumber%) AND " +
-	           "(:purchaseStatus IS NULL OR p.purchaseStatus = :purchaseStatus) AND " +
-	           "(:fromDate IS NULL OR p.purchaseDate >= :fromDate) AND " +
-	           "(:toDate IS NULL OR p.purchaseDate <= :toDate)")
+	@Query("SELECT tt FROM TradeTransaction tt WHERE " +
+	           "(:storeId IS NULL OR tt.store.id = :storeId) AND " +
+	           "(:supplierId IS NULL OR tt.partner.id = :supplierId) AND " +
+	           "(:transactionNumber IS NULL OR tt.transactionNumber LIKE %:transactionNumber%) AND " +
+	           "(:purchaseStatus IS NULL OR tt.transactionStatus = :purchaseStatus) AND " +
+	           "(:fromDate IS NULL OR tt.transactionDate >= :fromDate) AND " +
+	           "(:toDate IS NULL OR tt.transactionDate <= :toDate)")
 	Page<TradeTransaction> searchPurchases(
 	            @Param("storeId") Long storeId,
 	            @Param("supplierId") Long supplierId,
-	            @Param("poNumber") String poNumber,
+	            @Param("transactionNumber") String transactionNumber,
 	            @Param("purchaseStatus") TransactionStatus purchaseStatus,
 	            @Param("fromDate") Date fromDate,
 	            @Param("toDate") Date toDate,
@@ -34,10 +34,10 @@ public interface PurchaseRepository extends JpaRepository<TradeTransaction, Long
 	    );
 	
 	
-	TradeTransaction findByIdAndPoNumber(Long id, String po);
+	TradeTransaction findByIdAndTransactionNumber(Long id, String po);
 
 	// Query to count the number of purchase orders for a specific store within a date range
-	@Query("SELECT COUNT(p) FROM Purchase p WHERE p.store.id = :storeId AND p.purchaseDate BETWEEN :startDate AND :endDate")
+	@Query("SELECT COUNT(p) FROM TradeTransaction p WHERE p.store.id = :storeId AND p.transactionDate BETWEEN :startDate AND :endDate")
 	int countByStoreIdAndDateRange(@Param("storeId") Long storeId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 }

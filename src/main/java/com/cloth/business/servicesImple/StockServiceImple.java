@@ -1,6 +1,5 @@
 package com.cloth.business.servicesImple;
 
-import com.cloth.business.entities.Product;
 import com.cloth.business.entities.TradeTransaction;
 import com.cloth.business.entities.TradeTransactionDetails;
 import com.cloth.business.entities.Stock;
@@ -35,9 +34,9 @@ public class StockServiceImple implements StockService {
             stock.setProduct(purchaseDetail.getProduct());
             stock.setQuantity(purchaseDetail.getQuantity());
             stock.setStore(purchase.getStore());
-            stock.setPurchaseDetasils(purchaseDetail);
+            stock.setTransactionDetasils(purchaseDetail);
             stock.setTimestamp(new Date());
-            stock.setPurchase(purchase);
+            stock.setTransaction(purchase);
 
             stockList.add(stock);
         }

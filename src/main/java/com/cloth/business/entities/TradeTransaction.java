@@ -10,7 +10,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.cloth.business.entities.enums.TransactionStatus; // Changed enum import
+import com.cloth.business.entities.enums.TransactionStatus;
+import com.cloth.business.entities.enums.TransactionType; // Changed enum import
 
 @Data
 @Entity
@@ -42,8 +43,8 @@ public class TradeTransaction { // Changed class name from Purchase to TradeTran
     private Double discountAmount;    
     private String discountRemark;
 
-    private Double chargeAmount; // Changed from chargeAmount to additionalChargeAmount
-    private String chargeRemark; // Changed from chargeRemark to additionalChargeRemark
+    private Double chargeAmount; 
+    private String chargeRemark; 
   
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd") // Ensure this matches the format you're using in the frontend
@@ -56,6 +57,9 @@ public class TradeTransaction { // Changed class name from Purchase to TradeTran
     
     @Enumerated(EnumType.STRING)
     private TransactionStatus transactionStatus; // Changed enum from PurchaseStatus to TransactionStatus
+    
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
     @ManyToOne
     private User approvedBy;

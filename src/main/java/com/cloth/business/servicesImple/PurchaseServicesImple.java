@@ -29,7 +29,7 @@ import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.ProductCategoryRepository;
 import com.cloth.business.repositories.ProductRepository;
-import com.cloth.business.repositories.PurchaseRepository;
+import com.cloth.business.repositories.TransactionRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PurchaseServicesImple implements PurchaseServices {
 
 	@Autowired
-	private PurchaseRepository purchaseRepository;
+	private TransactionRepository transactionRepository;
 	
 	@Autowired
 	private StoreServices storeServices;
@@ -145,7 +145,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 
 		purchase.setTotalAmount(grandTotal);
 		purchase.setTransactionNumber(generatePOnumber(store));
-		return purchaseRepository.save(purchase);
+		return transactionRepository.save(purchase);
 	}
 
 	
@@ -246,7 +246,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		dbPurchase.setLastUpdatedDate(purchase.getLastUpdatedDate());
 		dbPurchase.setTransactionDetails(purchase.getTransactionDetails());
 
-		return purchaseRepository.save(dbPurchase);
+		return transactionRepository.save(dbPurchase);
 	}
 	
 	
@@ -254,7 +254,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	//generate PO number
 //	public String generatePOnumber(Store store) {
-//		long countPurchasesByStore = purchaseRepository.countPurchasesByStore(store.getId());
+//		long countPurchasesByStore = transactionRepository.countPurchasesByStore(store.getId());
 //
 //		String poNumber = "PO"+store.getId()+"S"+(countPurchasesByStore+1);
 //		return poNumber;
@@ -276,7 +276,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		Date endDate = Date.from(lastDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
 		// Get count of POs for the current month for the given store
-		int currentMonthCount = purchaseRepository.countByStoreIdAndDateRange(storeId, startDate, endDate);
+		int currentMonthCount = transactionRepository.countByStoreIdAndDateRange(storeId, startDate, endDate);
 
 		// Generate the serial number for the PO
 		String serialNumber = String.format("%04d", currentMonthCount + 1);
@@ -301,14 +301,14 @@ public class PurchaseServicesImple implements PurchaseServices {
 		Page<TradeTransaction> pageInfo;
 		
 		Pageable pageable = PageRequest.of(page, size, sort);
-		pageInfo = purchaseRepository.searchPurchases(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageable);
+		pageInfo = transactionRepository.searchPurchases(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageable);
 		return HelperUtils.pageToPageResponse(pageInfo);
 	}
 	
 	
 	@Override
 	public TradeTransaction getPurchaseInfoByIdAndPO(Long id, String po) {
-		TradeTransaction purchase = purchaseRepository.findByIdAndPoNumber(id, po);
+		TradeTransaction purchase = transactionRepository.findByIdAndTransactionNumber(id, po);
 		return purchase;
 	}
 
@@ -338,6 +338,6 @@ public class PurchaseServicesImple implements PurchaseServices {
 				purchase.setTransactionStatus(TransactionStatus.CLOSED);
 			}
 		}
-		return purchaseRepository.save(purchase);
+		return transactionRepository.save(purchase);
 	}
 }
