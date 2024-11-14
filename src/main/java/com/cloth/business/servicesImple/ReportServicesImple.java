@@ -1,6 +1,7 @@
 package com.cloth.business.servicesImple;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ReportServicesImple implements ReportServices{
             for(TradeTransactionDetails detail : purchaseInfo.getTransactionDetails()){
             	ReportProductDetails productDetails = new ReportProductDetails();
             	productDetails.setItemId(detail.getId());
-            	productDetails.setItemName(detail.getProduct().getName());
+            	productDetails.setItemName(new String(detail.getProduct().getName().getBytes(), StandardCharsets.UTF_8));
             	productDetails.setItemUOM(detail.getProduct().getSize());
             	productDetails.setItemCategory(detail.getProduct().getCategory().getName());
             	productDetails.setItemPrice(detail.getPrice());
