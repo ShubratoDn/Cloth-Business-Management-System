@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=kalpurush-font.jar -DgroupId=bangla -DartifactId=bangla -Dversion=1.0 -Dpackaging=jar
