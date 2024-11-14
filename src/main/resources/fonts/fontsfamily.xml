@@ -9,10 +9,12 @@
     </fontFamily>
      
       <fontFamily name="Kalpurush">
-        <normal><![CDATA[fonts/kalpurush/kalpurush.ttf]]></normal> 
-         <bold><![CDATA[fonts/kalpurush/kalpurush.ttf]]></bold>
-        <italic><![CDATA[fonts/kalpurush/kalpurush.ttf]]></italic>
-        <boldItalic><![CDATA[fonts/kalpurush/kalpurush.ttf]]></boldItalic>
+        <normal><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></normal>
+         <bold><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></bold>
+        <italic><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></italic>
+        <boldItalic><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></boldItalic>
         <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
     </fontFamily>
+
+
 </fontFamilies>
