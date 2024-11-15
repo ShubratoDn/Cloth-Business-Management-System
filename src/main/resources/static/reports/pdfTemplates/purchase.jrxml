@@ -528,11 +528,11 @@ com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 				<text><![CDATA[Copyright © 2024; All right has been reserved by Clothy]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="10" y="3" width="124" height="16" uuid="e2025332-97f6-4fe7-8f22-f23190fbeb52"/>
+				<reportElement x="10" y="3" width="170" height="16" uuid="e2025332-97f6-4fe7-8f22-f23190fbeb52"/>
 				<textElement>
 					<font fontName="Courier New"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Page : "+$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Page : "+$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="32" width="256" height="13" uuid="0fcb7205-b18a-49a6-a09b-312ccecec0cd"/>

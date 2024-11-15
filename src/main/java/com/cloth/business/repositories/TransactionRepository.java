@@ -2,6 +2,7 @@ package com.cloth.business.repositories;
 
 import java.util.Date;
 
+import com.cloth.business.entities.enums.TransactionType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +41,6 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	@Query("SELECT COUNT(p) FROM TradeTransaction p WHERE p.store.id = :storeId AND p.transactionDate BETWEEN :startDate AND :endDate")
 	int countByStoreIdAndDateRange(@Param("storeId") Long storeId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+	@Query("SELECT COUNT(tt) FROM TradeTransaction tt WHERE tt.store.id = :storeId AND tt.transactionDate BETWEEN :startDate AND :endDate AND tt.transactionType = :transactionType")
+	int countByStoreIdAndDateRangeAndType(@Param("storeId") Long storeId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("transactionType")TransactionType transactionType);
 }

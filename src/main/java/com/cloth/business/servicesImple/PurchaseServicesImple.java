@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.cloth.business.entities.enums.TransactionType;
 import com.cloth.business.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -276,7 +277,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		Date endDate = Date.from(lastDayOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
 		// Get count of POs for the current month for the given store
-		int currentMonthCount = transactionRepository.countByStoreIdAndDateRange(storeId, startDate, endDate);
+		int currentMonthCount = transactionRepository.countByStoreIdAndDateRangeAndType(storeId, startDate, endDate, TransactionType.PURCHASE);
 
 		// Generate the serial number for the PO
 		String serialNumber = String.format("%04d", currentMonthCount + 1);
