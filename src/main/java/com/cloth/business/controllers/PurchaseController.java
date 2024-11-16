@@ -2,6 +2,7 @@ package com.cloth.business.controllers;
 
 import java.util.Date;
 
+import com.cloth.business.entities.enums.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -72,9 +73,9 @@ public class PurchaseController {
 		}
 		throw new RequestRejectedException("Can not edit purchase order!");
 	}
-	
-	
-	
+
+
+	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_GET"})
 	@GetMapping("/search")
 	public ResponseEntity<?> searchPurchase(
 	        @RequestParam(value = "storeId", required = false) Long storeId,
@@ -99,8 +100,8 @@ public class PurchaseController {
 //	    System.out.println("pageSize: " + pageSize);
 //	    System.out.println("sortBy: " + sortBy);
 //	    System.out.println("sortDirection: " + sortDirection);
-//	    
-	    return ResponseEntity.ok(purchaseServices.searchPurchase(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageNumber, pageSize, sortBy, sortDirection));
+//
+	    return ResponseEntity.ok(purchaseServices.searchPurchase(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, TransactionType.PURCHASE, pageNumber, pageSize, sortBy, sortDirection));
 	}
 
 	

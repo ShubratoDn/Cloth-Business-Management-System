@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.cloth.business.entities.TradeTransaction;
 import com.cloth.business.entities.enums.TransactionStatus;
+import com.cloth.business.entities.enums.TransactionType;
 import com.cloth.business.payloads.PageResponse;
 
 public interface PurchaseServices {
@@ -18,7 +19,8 @@ public interface PurchaseServices {
 		        String poNumber, 
 		        TransactionStatus purchaseStatus,
 		        Date fromDate, 
-		        Date toDate, 
+		        Date toDate,
+				TransactionType transactionType,
 		        int page, 
 		        int size, 
 		        String sortBy, 

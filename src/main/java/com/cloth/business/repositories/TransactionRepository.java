@@ -23,7 +23,8 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	           "(:transactionNumber IS NULL OR tt.transactionNumber LIKE %:transactionNumber%) AND " +
 	           "(:purchaseStatus IS NULL OR tt.transactionStatus = :purchaseStatus) AND " +
 	           "(:fromDate IS NULL OR tt.transactionDate >= :fromDate) AND " +
-	           "(:toDate IS NULL OR tt.transactionDate <= :toDate)")
+	           "(:toDate IS NULL OR tt.transactionDate <= :toDate) AND " +
+				"(:transactionType IS NULL OR tt.transactionType = :transactionType) " )
 	Page<TradeTransaction> searchPurchases(
 	            @Param("storeId") Long storeId,
 	            @Param("supplierId") Long supplierId,
@@ -31,6 +32,7 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	            @Param("purchaseStatus") TransactionStatus purchaseStatus,
 	            @Param("fromDate") Date fromDate,
 	            @Param("toDate") Date toDate,
+	            @Param("transactionType") TransactionType transactionType,
 	            Pageable pageable
 	    );
 	

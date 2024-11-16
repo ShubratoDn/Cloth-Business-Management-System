@@ -290,7 +290,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 	
 	
 	@Override
-	public PageResponse searchPurchase(Long storeId, Long supplierId, String poNumber, TransactionStatus purchaseStatus, Date fromDate, Date toDate, int page, int size, String sortBy, String sortDirection) {
+	public PageResponse searchPurchase(Long storeId, Long supplierId, String poNumber, TransactionStatus purchaseStatus, Date fromDate, Date toDate, TransactionType transactionType, int page, int size, String sortBy, String sortDirection) {
 
 		Sort sort = null;
 		if (sortDirection.equalsIgnoreCase("asc")) {
@@ -302,7 +302,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		Page<TradeTransaction> pageInfo;
 		
 		Pageable pageable = PageRequest.of(page, size, sort);
-		pageInfo = transactionRepository.searchPurchases(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, pageable);
+		pageInfo = transactionRepository.searchPurchases(storeId, supplierId, poNumber, purchaseStatus, fromDate, toDate, transactionType, pageable);
 		return HelperUtils.pageToPageResponse(pageInfo);
 	}
 	
