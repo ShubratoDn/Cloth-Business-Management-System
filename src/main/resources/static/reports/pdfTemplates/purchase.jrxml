@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.21.0.final using JasperReports Library version 6.21.0-4f56c4f36cd19e17675219a9ac4692d5f0f13b06  -->
+<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.21.2-8434a0bd7c3bbc37cbf916f2968d35e4b165821a  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Purchase" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="61a14e2b-3488-482f-b049-7d769945458a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -72,6 +72,9 @@
 	<parameter name="companyLogo" class="java.lang.String"/>
 	<parameter name="watermarkText" class="java.lang.String"/>
 	<parameter name="qrCodeText" class="java.lang.String"/>
+	<parameter name="total_in_text" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Zero"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[]]>
 	</queryString>
@@ -553,7 +556,7 @@ com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 	<summary>
 		<band height="137" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="14" y="11" width="219" height="119" uuid="2f10fdb5-f4a4-40d9-afdd-e7c440b75c80">
+				<reportElement x="14" y="11" width="219" height="81" uuid="2f10fdb5-f4a4-40d9-afdd-e7c440b75c80">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
@@ -692,6 +695,13 @@ com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 					<font fontName="TiroBangla-Regular" size="8" isBold="false" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{chargeRemark}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="101" width="220" height="28" uuid="3b7ed82f-5ece-4826-b804-2ee02984c816"/>
+				<textElement markup="html">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b>Total in Word : </b>" + $P{total_in_text}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

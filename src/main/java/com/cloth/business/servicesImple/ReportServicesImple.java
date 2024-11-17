@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cloth.business.helpers.NumberToBanglaWords;
+import com.cloth.business.helpers.NumberToWordConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -73,6 +75,7 @@ public class ReportServicesImple implements ReportServices{
             parameters.put("charge",(purchaseInfo.getChargeAmount() == null ? 0.00 : purchaseInfo.getChargeAmount()));
             parameters.put("chargeRemark", "( "+purchaseInfo.getChargeRemark()+" )");
             parameters.put("grandTotal", purchaseInfo.getTotalAmount());
+            parameters.put("total_in_text", NumberToBanglaWords.numberToBanglaText(purchaseInfo.getTotalAmount(), NumberToBanglaWords.FORMAT.ENGLISH, NumberToBanglaWords.NUMBER_DISPLAY.DECIMAL));
 
 
 
