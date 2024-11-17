@@ -112,7 +112,44 @@
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-fonts</artifactId>
 			<version>6.21.0</version>
-		</dependency>		
+		</dependency>
+		
+		<!-- Noto Sans Bengali Font -->
+	    <dependency>
+	        <groupId>com.example</groupId>
+	        <artifactId>notosans-bengali-font</artifactId>
+	        <version>1.0.0</version>
+	        <scope>system</scope>
+	        <systemPath>${project.basedir}/lib/NotoSansBengali.jar</systemPath>
+	    </dependency>
+	
+	    <!-- Solaiman Lipi Font -->
+	    <dependency>
+	        <groupId>com.example</groupId>
+	        <artifactId>solaiman-lipi-font</artifactId>
+	        <version>1.0.0</version>
+	        <scope>system</scope>
+	        <systemPath>${project.basedir}/lib/SolaimanLipi.jar</systemPath>
+	    </dependency>
+	
+	    <!-- Kalpurush Font -->
+	    <dependency>
+	        <groupId>com.example</groupId>
+	        <artifactId>kalpurush-font</artifactId>
+	        <version>1.0.0</version>
+	        <scope>system</scope>
+	        <systemPath>${project.basedir}/lib/kalpurush-font.jar</systemPath>
+	    </dependency>
+	    
+	      
+	    <dependency>
+	        <groupId>com.example</groupId>
+	        <artifactId>tiroBangla-regular</artifactId>
+	        <version>1.0.0</version>
+	        <scope>system</scope>
+	        <systemPath>${project.basedir}/lib/TiroBangla-Regular.jar</systemPath>
+	    </dependency>
+		
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
@@ -125,7 +162,6 @@
 		</dependency>
 
 
-		
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

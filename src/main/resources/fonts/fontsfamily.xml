@@ -8,13 +8,21 @@
         <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
     </fontFamily>
      
-      <fontFamily name="Kalpurush">
-        <normal><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></normal>
-         <bold><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></bold>
-        <italic><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></italic>
-        <boldItalic><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></boldItalic>
-        <pdfEmbedded><![CDATA[true]]></pdfEmbedded>
-    </fontFamily>
+<!--       <fontFamily name="SolaimanLipi"> -->
+<!--         <normal><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></normal> -->
+<!--          <bold><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></bold> -->
+<!--         <italic><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></italic> -->
+<!--         <boldItalic><![CDATA[fonts/solaimanLipi/SolaimanLipi.ttf]]></boldItalic> -->
+<!--         <pdfEmbedded><![CDATA[true]]></pdfEmbedded> -->
+<!--     </fontFamily> -->
 
+
+<!--    <fontFamily name="Noto Sans Bengali"> -->
+<!--         <normal><![CDATA[fonts/googleFont/NotoSansBengali_ExtraCondensed-Regular.ttf]]></normal> -->
+<!--          <bold><![CDATA[fonts/googleFont/NotoSansBengali_ExtraCondensed-Regular.ttf]]></bold> -->
+<!--         <italic><![CDATA[fonts/googleFont/NotoSansBengali_ExtraCondensed-Regular.ttf]]></italic> -->
+<!--         <boldItalic><![CDATA[fonts/googleFont/NotoSansBengali_ExtraCondensed-Regular.ttf]]></boldItalic> -->
+<!--         <pdfEmbedded><![CDATA[true]]></pdfEmbedded> -->
+<!--     </fontFamily> -->
 
 </fontFamilies>

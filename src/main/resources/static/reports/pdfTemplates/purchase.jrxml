@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.21.2.final using JasperReports Library version 6.21.2-8434a0bd7c3bbc37cbf916f2968d35e4b165821a  -->
+<!-- Created with Jaspersoft Studio version 6.21.0.final using JasperReports Library version 6.21.0-4f56c4f36cd19e17675219a9ac4692d5f0f13b06  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Purchase" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="61a14e2b-3488-482f-b049-7d769945458a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
@@ -429,7 +429,7 @@ com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 									<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 								</reportElement>
 								<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="Kalpurush" pdfEncoding="Identity-H"/>
+									<font fontName="TiroBangla-Regular" pdfEncoding=""/>
 									<paragraph leftIndent="5" rightIndent="5" spacingBefore="0"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{itemName} + " - "+ $F{itemUOM} +" (" + $F{itemCategory} + ") "]]></textFieldExpression>
@@ -682,14 +682,14 @@ com.google.zxing.BarcodeFormat.QR_CODE, 300, 300))]]></imageExpression>
 			<textField isBlankWhenNull="true">
 				<reportElement x="250" y="62" width="179" height="15" uuid="d9bea7b4-8851-4d42-adfc-e3082813b631"/>
 				<textElement textAlignment="Right">
-					<font fontName="Kalpurush" size="8" isBold="true" pdfEncoding="Identity-H"/>
+					<font fontName="TiroBangla-Regular" size="8" isBold="false" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{discountRemark}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="250" y="92" width="179" height="15" uuid="5118dfeb-a68f-416c-af7f-23618162944e"/>
 				<textElement textAlignment="Right">
-					<font fontName="Kalpurush" size="8" isBold="true" pdfEncoding="Identity-H"/>
+					<font fontName="TiroBangla-Regular" size="8" isBold="false" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{chargeRemark}]]></textFieldExpression>
 			</textField>

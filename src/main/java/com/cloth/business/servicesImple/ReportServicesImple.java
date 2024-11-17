@@ -33,6 +33,7 @@ public class ReportServicesImple implements ReportServices{
 	
 	    try {
         	File file = ResourceUtils.getFile("classpath:static/reports/pdfTemplates/purchase.jrxml");
+//        	File file = ResourceUtils.getFile("classpath:static/reports/pdfTemplates/text_rpt.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             
             // Create parameters for the main report
