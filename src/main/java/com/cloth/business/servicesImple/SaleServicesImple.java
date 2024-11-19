@@ -8,8 +8,10 @@ import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.ProductCategoryRepository;
 import com.cloth.business.repositories.ProductRepository;
+import com.cloth.business.repositories.TransactionDetailsRepository;
 import com.cloth.business.repositories.TransactionRepository;
 import com.cloth.business.services.*;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -42,6 +41,9 @@ public class SaleServicesImple implements SaleService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private TransactionDetailsRepository transactionDetailsRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -122,7 +124,7 @@ public class SaleServicesImple implements SaleService {
 
 		List<TradeTransactionDetails> updatedSaleDetails = new ArrayList<>();
 		Double productPriceTotal = 0.00;
-		for (TradeTransactionDetails saleDetail : sale.getTransactionDetails()) {
+        for (TradeTransactionDetails saleDetail : sale.getTransactionDetails()) {
 
             Product product = productService.getProductById(saleDetail.getProduct().getId());
             saleDetail.setProduct(product);
@@ -153,11 +155,43 @@ public class SaleServicesImple implements SaleService {
 		dbSale.setTotalAmount(sale.getTotalAmount());
 		dbSale.setLastUpdatedBy(sale.getLastUpdatedBy());
 		dbSale.setLastUpdatedDate(sale.getLastUpdatedDate());
-		dbSale.setTransactionDetails(sale.getTransactionDetails());
+        dbSale.setTransactionDetails(sale.getTransactionDetails());
+        TradeTransaction save = transactionRepository.save(dbSale);
 
-		return transactionRepository.save(dbSale);
+
+        // Detect and delete removed transaction details
+        List<TradeTransactionDetails> existingDetails = dbSale.getTransactionDetails();
+        List<TradeTransactionDetails> removedDetails = new ArrayList<>();
+
+        for (TradeTransactionDetails existingDetail : existingDetails) {
+            boolean existsInUpdated = false;
+            for (TradeTransactionDetails updatedDetail : sale.getTransactionDetails()) {
+                if (existingDetail.getId().equals(updatedDetail.getId())) {
+                    existsInUpdated = true;
+                    break;
+                }
+            }
+            if (!existsInUpdated) {
+                removedDetails.add(existingDetail);
+            }
+        }
+
+        // Delete the removed transaction details from the database
+        if (!removedDetails.isEmpty()) {
+            for (TradeTransactionDetails removedDetail : removedDetails) {
+                System.out.println("Removing row " + removedDetail.getId() + " from");
+                deleteTransactionDetails(removedDetail.getId());
+            }
+        }
+
+        return save;
 	}
 
+
+    @Transactional
+    public void deleteTransactionDetails(Long id){
+        transactionDetailsRepository.deleteById(id);
+    }
 
 	public String generateSOnumber(Store store) {
 		Long storeId = store.getId();
@@ -183,10 +217,8 @@ public class SaleServicesImple implements SaleService {
 		// Build and return the PO number string
 		return String.format("SO-ST%02d-%s%s%s", storeId, year, month, serialNumber);
 	}
-//
-//
-//
-//
+
+
 @Override
 public PageResponse searchSale(Long storeId, Long supplierId, String poNumber, TransactionStatus purchaseStatus, Date fromDate, Date toDate, TransactionType transactionType, int page, int size, String sortBy, String sortDirection) {
 
