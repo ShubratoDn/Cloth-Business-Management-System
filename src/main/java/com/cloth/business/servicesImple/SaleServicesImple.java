@@ -71,20 +71,21 @@ public class SaleServicesImple implements SaleService {
         sale.setPartner(customer);
 
 
-        List<TradeTransactionDetails> updatedPurchaseDetails = new ArrayList<>();
+        List<TradeTransactionDetails> updatedSaleDetails = new ArrayList<>();
         double productPriceTotal = 0.00;
 
         for (TradeTransactionDetails saleDetail : sale.getTransactionDetails()) {
 
             Product product = productService.getProductById(saleDetail.getProduct().getId());
 
-
+            saleDetail.setProduct(product);
+            
             double total = saleDetail.getQuantity() * saleDetail.getPrice();
             productPriceTotal = productPriceTotal + (total);
 
 
             saleDetail.setTradeTransaction(sale);
-            updatedPurchaseDetails.add(saleDetail);
+            updatedSaleDetails.add(saleDetail);
         }
 
         double grandTotal = productPriceTotal;
@@ -95,118 +96,68 @@ public class SaleServicesImple implements SaleService {
         sale.setTransactionNumber(generateSOnumber(store));
         return transactionRepository.save(sale);
     }
+    
+    
+	@Override
+	public TradeTransaction getSaleInfoByIdAndSO(Long id, String so) {
+		TradeTransaction sale = transactionRepository.findByIdAndTransactionNumberAndTransactionType(id, so, TransactionType.SALE);
+		return sale;
+	}
 
 
-    //update purchase
-//	@Override
-//	public TradeTransaction updatePurchase(TradeTransaction purchase, TradeTransaction dbPurchase) {
-//
-//		if (purchase.getStore().getId() != null && purchase.getStore().getId() > 0) {
-//			Store store = storeServices.getStoreById(purchase.getStore().getId());
-//			dbPurchase.setStore(store);
-//		}
-//
-//		if (purchase.getPartner().getId() != null && purchase.getPartner().getId() > 0) {
-//			StakeHolder supplier = stakeHolderService.getStakeHolderWithType(purchase.getPartner().getId(),
-//					"supplier");
-//			dbPurchase.setPartner(supplier);
-//		}
-//
-//		List<TradeTransactionDetails> updatedPurchaseDetails = new ArrayList<>();
-//		Double productPriceTotal = 0.00;
-//		for (TradeTransactionDetails purchaseDetail : purchase.getTransactionDetails()) {
-//			// if the category not found...
-//			ProductCategory productCategory = productCategoryRepository
-//					.findByName(purchaseDetail.getProduct().getCategory().getName());
-//			if (productCategory == null) {
-//				Product product = purchaseDetail.getProduct();
-//				product.setProductCategory(purchaseDetail.getProduct().getCategory().getName());
-//
-//				if (purchaseDetail.getProductImage() != null) {
-//					product.setProductImage(purchaseDetail.getProductImage());
-//				}
-//
-//				// creating new product
-//				Product savedProduct = productService.createProduct(product);
-//
-//				purchaseDetail.setProduct(savedProduct);
-//				log.info("New product created {}", product.getName());
-//			} else {
-//				Product product = purchaseDetail.getProduct();
-//				product.setCategory(productCategory);
-//
-//				List<Product> byCategoryAndNameAndSize = productRepository.findByCategoryAndNameAndSize(
-//						purchaseDetail.getProduct().getCategory(), purchaseDetail.getProduct().getName(),
-//						purchaseDetail.getProduct().getSize());
-//				if (byCategoryAndNameAndSize.size() != 0 && byCategoryAndNameAndSize.get(0) != null) {
-//					purchaseDetail.setProduct(byCategoryAndNameAndSize.get(0));
-//					// upload the new product image if found
-//					if (purchaseDetail.getProductImage() != null) {
-//						String uploadProductImage = fileServices.uploadProductImage(purchaseDetail.getProductImage());
-//						purchaseDetail.setImage(uploadProductImage);
-//					} else {
-//						if(purchaseDetail.getImage() != null){
-//							purchaseDetail.setImage(purchaseDetail.getImage());
-//						}else{
-//							purchaseDetail.setImage(purchaseDetail.getProduct().getImage());
-//						}
-//					}
-//
-//					log.info("Product already exist {}", product.getName());
-//				} else {
-//					product.setProductCategory(product.getCategory().getName());
-//					if (purchaseDetail.getProductImage() != null) {
-//						product.setProductImage(purchaseDetail.getProductImage());
-//					}
-//
-//					// create new product
-//					Product savedProduct = productService.createProduct(product);
-//					purchaseDetail.setProduct(savedProduct);
-//					log.info("New product created {} , Size: {}", product.getName(), product.getSize());
-//				}
-//			}
-//
-//			Double total = purchaseDetail.getQuantity() * purchaseDetail.getPrice();
-//			productPriceTotal = productPriceTotal + (total);
-//
-//			purchaseDetail.setTradeTransaction(purchase);
-//			updatedPurchaseDetails.add(purchaseDetail);
-//		}
-//
-//		Double grandTotal = productPriceTotal;
-//		grandTotal = purchase.getDiscountAmount() == null ? grandTotal : grandTotal - purchase.getDiscountAmount();
-//		grandTotal = purchase.getChargeAmount() == null ? grandTotal : grandTotal + purchase.getChargeAmount();
-//
-//
-//		purchase.setTotalAmount(grandTotal);
-//
-//
-//		dbPurchase.setRemark(purchase.getRemark());
-//		dbPurchase.setDiscountAmount(purchase.getDiscountAmount() != null ? purchase.getDiscountAmount() : 0);
-//		dbPurchase.setChargeAmount(purchase.getChargeAmount() != null ? purchase.getChargeAmount() : 0);
-//		dbPurchase.setChargeRemark(purchase.getChargeRemark());
-//		dbPurchase.setDiscountRemark(purchase.getDiscountRemark());
-//
-//		dbPurchase.setTransactionDate(purchase.getTransactionDate());
-//		dbPurchase.setTransactionStatus(purchase.getTransactionStatus());
-//		dbPurchase.setTotalAmount(purchase.getTotalAmount());
-//		dbPurchase.setLastUpdatedBy(purchase.getLastUpdatedBy());
-//		dbPurchase.setLastUpdatedDate(purchase.getLastUpdatedDate());
-//		dbPurchase.setTransactionDetails(purchase.getTransactionDetails());
-//
-//		return transactionRepository.save(dbPurchase);
-//	}
-//
-//
-//
-//
-//	//generate PO number
-////	public String generatePOnumber(Store store) {
-////		long countPurchasesByStore = transactionRepository.countPurchasesByStore(store.getId());
-////
-////		String poNumber = "PO"+store.getId()+"S"+(countPurchasesByStore+1);
-////		return poNumber;
-////	}
+//    update sale
+	@Override
+	public TradeTransaction updateSale(TradeTransaction sale, TradeTransaction dbSale) {
+
+		if (sale.getStore().getId() != null && sale.getStore().getId() > 0) {
+			Store store = storeServices.getStoreById(sale.getStore().getId());
+			dbSale.setStore(store);
+		}
+
+		if (sale.getPartner().getId() != null && sale.getPartner().getId() > 0) {
+			StakeHolder customer = stakeHolderService.getStakeHolderWithType(sale.getPartner().getId(),
+					"customer");
+			dbSale.setPartner(customer);
+		}
+
+		List<TradeTransactionDetails> updatedSaleDetails = new ArrayList<>();
+		Double productPriceTotal = 0.00;
+		for (TradeTransactionDetails saleDetail : sale.getTransactionDetails()) {
+
+            Product product = productService.getProductById(saleDetail.getProduct().getId());
+            saleDetail.setProduct(product);
+
+			Double total = saleDetail.getQuantity() * saleDetail.getPrice();
+			productPriceTotal = productPriceTotal + (total);
+
+			saleDetail.setTradeTransaction(sale);
+			updatedSaleDetails.add(saleDetail);
+		}
+
+		Double grandTotal = productPriceTotal;
+		grandTotal = sale.getDiscountAmount() == null ? grandTotal : grandTotal - sale.getDiscountAmount();
+		grandTotal = sale.getChargeAmount() == null ? grandTotal : grandTotal + sale.getChargeAmount();
+
+
+		sale.setTotalAmount(grandTotal);
+
+
+		dbSale.setRemark(sale.getRemark());
+		dbSale.setDiscountAmount(sale.getDiscountAmount() != null ? sale.getDiscountAmount() : 0);
+		dbSale.setChargeAmount(sale.getChargeAmount() != null ? sale.getChargeAmount() : 0);
+		dbSale.setChargeRemark(sale.getChargeRemark());
+		dbSale.setDiscountRemark(sale.getDiscountRemark());
+
+		dbSale.setTransactionDate(sale.getTransactionDate());
+		dbSale.setTransactionStatus(sale.getTransactionStatus());
+		dbSale.setTotalAmount(sale.getTotalAmount());
+		dbSale.setLastUpdatedBy(sale.getLastUpdatedBy());
+		dbSale.setLastUpdatedDate(sale.getLastUpdatedDate());
+		dbSale.setTransactionDetails(sale.getTransactionDetails());
+
+		return transactionRepository.save(dbSale);
+	}
+
 
 	public String generateSOnumber(Store store) {
 		Long storeId = store.getId();
@@ -256,36 +207,36 @@ public PageResponse searchSale(Long storeId, Long supplierId, String poNumber, T
 //
 //	@Override
 //	public TradeTransaction getPurchaseInfoByIdAndPO(Long id, String po) {
-//		TradeTransaction purchase = transactionRepository.findByIdAndTransactionNumber(id, po);
-//		return purchase;
+//		TradeTransaction sale = transactionRepository.findByIdAndTransactionNumber(id, po);
+//		return sale;
 //	}
 //
 //
 //	@Override
-//	public TradeTransaction updatePurchaseStatus(TradeTransaction purchase, TransactionStatus status) {
+//	public TradeTransaction updatePurchaseStatus(TradeTransaction sale, TransactionStatus status) {
 //		if(status.equals(TransactionStatus.APPROVED) ){
-//			purchase.setTransactionStatus(TransactionStatus.APPROVED);
-//			purchase.setApprovedBy(HelperUtils.getLoggedinUser());
-//			purchase.setApprovedDate(new Date());
+//			sale.setTransactionStatus(TransactionStatus.APPROVED);
+//			sale.setApprovedBy(HelperUtils.getLoggedinUser());
+//			sale.setApprovedDate(new Date());
 //
-//			purchase.setRejectedBy(null);
-//			purchase.setRejectedDate(null);
+//			sale.setRejectedBy(null);
+//			sale.setRejectedDate(null);
 //
 //			//UPDATING STOCK
-//			stockService.updateStock(purchase);
+//			stockService.updateStock(sale);
 //		}else if(status.equals(TransactionStatus.REJECTED)){
-//			purchase.setRejectedBy(HelperUtils.getLoggedinUser());
-//			purchase.setRejectedDate(new Date());
-// 			purchase.setTransactionStatus(TransactionStatus.REJECTED);
+//			sale.setRejectedBy(HelperUtils.getLoggedinUser());
+//			sale.setRejectedDate(new Date());
+// 			sale.setTransactionStatus(TransactionStatus.REJECTED);
 //
-//			purchase.setApprovedBy(null);
-//			purchase.setApprovedDate(null);
+//			sale.setApprovedBy(null);
+//			sale.setApprovedDate(null);
 //
 //		} else if (status.equals(TransactionStatus.CLOSED)) {
-//			if(purchase.getTransactionStatus().equals(TransactionStatus.APPROVED) || purchase.getTransactionStatus().equals(TransactionStatus.REJECTED)) {
-//				purchase.setTransactionStatus(TransactionStatus.CLOSED);
+//			if(sale.getTransactionStatus().equals(TransactionStatus.APPROVED) || sale.getTransactionStatus().equals(TransactionStatus.REJECTED)) {
+//				sale.setTransactionStatus(TransactionStatus.CLOSED);
 //			}
 //		}
-//		return transactionRepository.save(purchase);
+//		return transactionRepository.save(sale);
 //	}
 }

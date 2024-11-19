@@ -9,10 +9,12 @@ import java.util.Date;
 
 public interface SaleService {
 
+	TradeTransaction getSaleInfoByIdAndSO(Long id, String so);
+	
     TradeTransaction createSale(TradeTransaction sale);
 
-    //    TradeTransaction updatePurchase(TradeTransaction purchase, TradeTransaction dbPurchase);
-//
+    TradeTransaction updateSale(TradeTransaction sale, TradeTransaction dbSale);
+    
     PageResponse searchSale(
             Long storeId,
             Long supplierId,

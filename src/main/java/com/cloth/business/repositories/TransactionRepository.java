@@ -38,6 +38,8 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	
 	
 	TradeTransaction findByIdAndTransactionNumber(Long id, String po);
+	
+	TradeTransaction findByIdAndTransactionNumberAndTransactionType(Long id, String po, TransactionType type);
 
 	// Query to count the number of purchase orders for a specific store within a date range
 	@Query("SELECT COUNT(p) FROM TradeTransaction p WHERE p.store.id = :storeId AND p.transactionDate BETWEEN :startDate AND :endDate")
