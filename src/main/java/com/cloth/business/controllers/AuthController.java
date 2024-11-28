@@ -79,24 +79,57 @@ public class AuthController {
 
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-					"User Account Disabled", "User account is disabled.");
-			log.error("Login failed for user '{}': User account is disabled.", username);
-			return ResponseEntity.badRequest().body(errorResponse);
-		} catch (BadCredentialsException e) {
-			ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(),
-					"Bad Credentials",
-//                    "Incorrect username or password."
-					"Incorrect password.");
-			log.error("Login failed for user '{}': Incorrect username or password.", username);
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
-		} catch (InternalAuthenticationServiceException e) {
-			ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(),
-					"User Not Found", "User not found.");
-			log.error("Login failed for user '{}': User not found.", username);
-			return ResponseEntity.badRequest().body(errorResponse);
-		}
+		}catch (BadCredentialsException e) {
+	        // Handle bad credentials
+	        ErrorResponse errorResponse = new ErrorResponse(
+	                LocalDateTime.now(), 
+	                HttpStatus.UNAUTHORIZED.value(),
+	                "Bad Credentials", 
+	                "Incorrect password."
+	        );
+	        log.error("Login failed for user '{}': Incorrect username or password.", username);
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+	    } catch (LockedException e) {
+	        // Handle locked account
+	        ErrorResponse errorResponse = new ErrorResponse(
+	                LocalDateTime.now(), 
+	                HttpStatus.LOCKED.value(),
+	                "User Account Locked", 
+	                "Your account is locked. Please contact support."
+	        );
+	        log.error("Login failed for user '{}': Account is locked.", username);
+	        return ResponseEntity.status(HttpStatus.LOCKED).body(errorResponse);
+	    } catch (DisabledException e) {
+	        // Handle disabled account
+	        ErrorResponse errorResponse = new ErrorResponse(
+	                LocalDateTime.now(), 
+	                HttpStatus.FORBIDDEN.value(),
+	                "User Account Disabled", 
+	                "Your account is disabled. Please contact support."
+	        );
+	        log.error("Login failed for user '{}': User account is disabled.", username);
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+	    } catch (AccountExpiredException e) {
+	        // Handle expired account
+	        ErrorResponse errorResponse = new ErrorResponse(
+	                LocalDateTime.now(), 
+	                HttpStatus.UNAUTHORIZED.value(),
+	                "User Account Expired", 
+	                "Your account has expired. Please contact support."
+	        );
+	        log.error("Login failed for user '{}': Account expired.", username);
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+	    }  catch (InternalAuthenticationServiceException e) {
+	        // Handle user not found
+	        ErrorResponse errorResponse = new ErrorResponse(
+	                LocalDateTime.now(), 
+	                HttpStatus.BAD_REQUEST.value(),
+	                "User Not Found", 
+	                "User not found."
+	        );
+	        log.error("Login failed for user '{}': User not found.", username);
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	    }
 
 		UserDetails userDetails = customUserDetailsServiceImpl.loadUserByUsername(username);
 		String token = jwtTokenUtil.generateToken(userDetails);

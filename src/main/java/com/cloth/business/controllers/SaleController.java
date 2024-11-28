@@ -79,4 +79,26 @@ public class SaleController {
 		}
 		throw new RequestRejectedException("Can not edit purchase order!");
 	}
+    
+    
+    
+    
+    @PutMapping("/update-purchase-status")
+	@CheckRoles({"ROLE_ADMIN", "ROLE_SALE_AUTHORIZATION"})
+	public ResponseEntity<?> updateSaleStatus(@RequestBody TradeTransaction sale){
+		TradeTransaction dbSale = saleService.getSaleInfoByIdAndSO(sale.getId(), sale.getTransactionNumber());
+		if(dbSale.getTransactionType() != TransactionType.SALE) {
+			throw new RequestRejectedException("Requested transaction is not Sale type!");
+		}
+		
+		if(HelperUtils.userAssignedThisStore(dbSale.getStore())){
+			if(sale.getTransactionStatus().equals(TransactionStatus.REJECTED)){
+				dbSale.setRejectedNote(sale.getRejectedNote());
+			}
+			return ResponseEntity.ok(saleService.updateSaleStatus(dbSale, sale.getTransactionStatus()));
+		}else{
+			throw new RequestRejectedException("Unauthorized to update status of purchase order!");
+		}
+
+	}
 }

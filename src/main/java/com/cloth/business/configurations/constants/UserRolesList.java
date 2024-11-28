@@ -11,6 +11,9 @@ public class UserRolesList {
 	
 	//Used to save these role to the database automatically
 	static {
+//	    userRoles.add(createRole(null, "ROLE_ADMIN", "Admin", "admin", true));
+
+		
 	    // User Management Roles
 	    userRoles.add(createRole(null, "ROLE_USER_CREATE", "User Create", "user", true));
 	    userRoles.add(createRole(null, "ROLE_USER_GET", "User Get", "user", true));

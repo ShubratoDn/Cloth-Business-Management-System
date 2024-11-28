@@ -118,6 +118,10 @@ public class PurchaseController {
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_AUTHORIZATION"})
 	public ResponseEntity<?> updatePurchaseStatus(@RequestBody TradeTransaction purchase){
 		TradeTransaction dbPurchase = purchaseServices.getPurchaseInfoByIdAndPO(purchase.getId(), purchase.getTransactionNumber());
+		if(dbPurchase.getTransactionType() != TransactionType.PURCHASE) {
+			throw new RequestRejectedException("Requested transaction is not Purchase type!");
+		}
+		
 		if(HelperUtils.userAssignedThisStore(dbPurchase.getStore())){
 			if(purchase.getTransactionStatus().equals(TransactionStatus.REJECTED)){
 				dbPurchase.setRejectedNote(purchase.getRejectedNote());

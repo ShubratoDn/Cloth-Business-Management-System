@@ -29,6 +29,6 @@ public interface SaleService {
             String sortDirection
     );
 
-//    TradeTransaction updatePurchaseStatus(TradeTransaction purchase, TransactionStatus status);
+    TradeTransaction updateSaleStatus(TradeTransaction purchase, TransactionStatus status);
 
 }

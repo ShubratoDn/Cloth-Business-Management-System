@@ -123,7 +123,6 @@ public class SaleServicesImple implements SaleService {
 		List<TradeTransactionDetails> updatedSaleDetails = new ArrayList<>();
 		Double productPriceTotal = 0.00;
 		for (TradeTransactionDetails saleDetail : sale.getTransactionDetails()) {
-
             Product product = productService.getProductById(saleDetail.getProduct().getId());
             saleDetail.setProduct(product);
 
@@ -212,31 +211,48 @@ public PageResponse searchSale(Long storeId, Long supplierId, String poNumber, T
 //	}
 //
 //
-//	@Override
-//	public TradeTransaction updatePurchaseStatus(TradeTransaction sale, TransactionStatus status) {
-//		if(status.equals(TransactionStatus.APPROVED) ){
-//			sale.setTransactionStatus(TransactionStatus.APPROVED);
-//			sale.setApprovedBy(HelperUtils.getLoggedinUser());
-//			sale.setApprovedDate(new Date());
-//
-//			sale.setRejectedBy(null);
-//			sale.setRejectedDate(null);
-//
-//			//UPDATING STOCK
+	@Override
+	public TradeTransaction updateSaleStatus(TradeTransaction sale, TransactionStatus status) {
+		if(status.equals(TransactionStatus.APPROVED) ){
+			sale.setTransactionStatus(TransactionStatus.APPROVED);
+			sale.setApprovedBy(HelperUtils.getLoggedinUser());
+			sale.setApprovedDate(new Date());
+
+			sale.setRejectedBy(null);
+			sale.setRejectedDate(null);
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//UPDATING STOCK
 //			stockService.updateStock(sale);
-//		}else if(status.equals(TransactionStatus.REJECTED)){
-//			sale.setRejectedBy(HelperUtils.getLoggedinUser());
-//			sale.setRejectedDate(new Date());
-// 			sale.setTransactionStatus(TransactionStatus.REJECTED);
-//
-//			sale.setApprovedBy(null);
-//			sale.setApprovedDate(null);
-//
-//		} else if (status.equals(TransactionStatus.CLOSED)) {
-//			if(sale.getTransactionStatus().equals(TransactionStatus.APPROVED) || sale.getTransactionStatus().equals(TransactionStatus.REJECTED)) {
-//				sale.setTransactionStatus(TransactionStatus.CLOSED);
-//			}
-//		}
-//		return transactionRepository.save(sale);
-//	}
+		}else if(status.equals(TransactionStatus.REJECTED)){
+			sale.setRejectedBy(HelperUtils.getLoggedinUser());
+			sale.setRejectedDate(new Date());
+ 			sale.setTransactionStatus(TransactionStatus.REJECTED);
+
+			sale.setApprovedBy(null);
+			sale.setApprovedDate(null);
+
+		} else if (status.equals(TransactionStatus.CLOSED)) {
+			if(sale.getTransactionStatus().equals(TransactionStatus.APPROVED) || sale.getTransactionStatus().equals(TransactionStatus.REJECTED)) {
+				sale.setTransactionStatus(TransactionStatus.CLOSED);
+			}
+		}
+		return transactionRepository.save(sale);
+	}
 }

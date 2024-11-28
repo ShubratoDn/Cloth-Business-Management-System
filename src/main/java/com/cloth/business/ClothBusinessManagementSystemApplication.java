@@ -18,13 +18,17 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.cloth.business.configurations.constants.Constants;
 import com.cloth.business.configurations.constants.UserRolesList;
+import com.cloth.business.entities.User;
 import com.cloth.business.entities.UserRole;
 import com.cloth.business.exceptions.ResourceAlreadyExistsException;
+import com.cloth.business.repositories.UserRepository;
 import com.cloth.business.repositories.UserRoleRepository;
 import com.cloth.business.services.UserRoleServices;
+import com.cloth.business.services.UserServices;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -51,13 +55,20 @@ public class ClothBusinessManagementSystemApplication implements CommandLineRunn
     @Autowired
     private UserRoleRepository userRoleRepository;
     
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
 
     @Override
     public void run(String... args) throws Exception {
 //    	List<UserRole> userRoles = UserRolesList.userRoles;
 //    	saveAllRoles(userRoles);
 
-
+//    	createAdminUser();
+    	
 		try {
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 
@@ -116,6 +127,25 @@ public class ClothBusinessManagementSystemApplication implements CommandLineRunn
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void createAdminUser() {
+		User user = new User();
+		user.setEmail("admin@gmail.com");
+		user.setIsLocked(false);
+		user.setName("Admin");
+		user.setPassword(passwordEncoder.encode("admin"));
+		
+		UserRole role = new UserRole();
+		role.setIsActive(true);
+		role.setRole("ROLE_ADMIN");
+		role.setCategory("admin");
+		role.setTitle("ADMIN");
+		
+		user.setRoles(List.of(role));
+		
+		userRepository.save(user);
 	}
 
 }
