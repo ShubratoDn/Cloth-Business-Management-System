@@ -1,5 +1,6 @@
 package com.cloth.business.entities;
 
+import com.cloth.business.entities.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -36,4 +37,7 @@ public class Stock {
     private Store store;
 
     private Date timestamp;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 }

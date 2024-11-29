@@ -1,5 +1,7 @@
-package com.cloth.business.entities;
+package com.cloth.business.payloads;
 
+import com.cloth.business.entities.Product;
+import com.cloth.business.entities.Store;
 import lombok.Data;
 
 @Data

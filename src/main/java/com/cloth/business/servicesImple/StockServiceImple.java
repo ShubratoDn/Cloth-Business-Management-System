@@ -3,7 +3,7 @@ package com.cloth.business.servicesImple;
 import com.cloth.business.entities.TradeTransaction;
 import com.cloth.business.entities.TradeTransactionDetails;
 import com.cloth.business.entities.Stock;
-import com.cloth.business.entities.StockOverview;
+import com.cloth.business.payloads.StockOverview;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.StockRepository;
@@ -26,18 +26,18 @@ public class StockServiceImple implements StockService {
     private StockRepository stockRepository;
 
     @Override
-    public List<Stock> updateStock(TradeTransaction purchase) {
+    public List<Stock> updateStock(TradeTransaction transaction) {
         List<Stock> stockList = new ArrayList<>();
-        for(TradeTransactionDetails purchaseDetail : purchase.getTransactionDetails()){
+        for(TradeTransactionDetails transactionDetail : transaction.getTransactionDetails()){
             Stock stock = new Stock();
-            stock.setLocation(purchase.getStore().getAddress());
-            stock.setProduct(purchaseDetail.getProduct());
-            stock.setQuantity(purchaseDetail.getQuantity());
-            stock.setStore(purchase.getStore());
-            stock.setTransactionDetasils(purchaseDetail);
+            stock.setLocation(transaction.getStore().getAddress());
+            stock.setProduct(transactionDetail.getProduct());
+            stock.setQuantity(transactionDetail.getQuantity());
+            stock.setStore(transaction.getStore());
+            stock.setTransactionDetasils(transactionDetail);
             stock.setTimestamp(new Date());
-            stock.setTransaction(purchase);
-
+            stock.setTransaction(transaction);
+            stock.setTransactionType(transaction.getTransactionType());
             stockList.add(stock);
         }
         return  stockRepository.saveAll(stockList);
@@ -63,5 +63,10 @@ public class StockServiceImple implements StockService {
     public List<StockOverview> getStockOverviewByStore(Long storeId) {
     	List<StockOverview> stockOverviewByStore = stockRepository.findStockOverviewByStore(storeId);
     	return stockOverviewByStore;
+    }
+
+    @Override
+    public List<StockOverview> findStockByStoreAndProduct(Long storeId, Long productId){
+        return stockRepository.findStockByStoreAndProduct(storeId, productId);
     }
 }

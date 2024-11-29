@@ -471,4 +471,18 @@ public class GlobalExceptionHandler {
     }
 
 
+
+    @ExceptionHandler(StockException.class)
+    public ResponseEntity<ErrorResponse> handleStockException(StockException ex) {
+        // Create an error response with details about the missing resource
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Something went wrong on Stock",
+                 ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
 }
