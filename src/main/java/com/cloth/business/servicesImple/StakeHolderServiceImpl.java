@@ -107,6 +107,17 @@ public class StakeHolderServiceImpl implements StakeHolderService {
     
     
     @Override
+    public List<StakeHolder> getStakeHoldersByStore(Long storeId){
+        // Create Store object with the provided storeId
+        Store store = new Store();
+        store.setId(storeId);
+
+        // Retrieve stakeholders from the repository
+        return stakeHolderRepository.findByStore(store);
+    }
+    
+    
+    @Override
     public StakeHolder getStakeHolderWithType(Long stakeholderId, String type) {
     	// Convert String to StakeHolderType enum
         StakeHolderType stakeHolderType;

@@ -16,6 +16,6 @@ public interface StakeHolderService {
     Page<StakeHolder> getAllStakeHolders(Pageable pageable);
 
     List<StakeHolder> getStakeHoldersByTypeAndStore(String type, Long storeId);
-    
+    List<StakeHolder> getStakeHoldersByStore(Long storeId);
     StakeHolder getStakeHolderWithType(Long stakeholderId, String type);
 }

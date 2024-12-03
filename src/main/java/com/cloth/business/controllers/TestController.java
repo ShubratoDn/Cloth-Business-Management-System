@@ -1,7 +1,10 @@
 package com.cloth.business.controllers;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +28,7 @@ import com.cloth.business.entities.TradeTransaction;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.services.PurchaseServices;
 import com.cloth.business.services.ReportServices;
+import com.cloth.business.servicesImple.ExcelServiceImple;
 
 import jakarta.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -67,32 +71,7 @@ public class TestController {
         try {
         	File file = ResourceUtils.getFile("classpath:purchase.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-            
-//            // Create parameters for the main report
-//            Map<String, Object> parameters = new HashMap<>();
-//            parameters.put("poNumber", purchaseInfo.getPoNumber());
-//            parameters.put("storeName", purchaseInfo.getStore().getStoreName());
-//            parameters.put("storeCode", purchaseInfo.getStore().getStoreCode());
-//            parameters.put("storeAddress", purchaseInfo.getStore().getAddress());
-//            
-//            parameters.put("supplierName", purchaseInfo.getSupplier().getName());
-//            parameters.put("supplierAddress", purchaseInfo.getSupplier().getAddress());
-//            parameters.put("supplierPhone", purchaseInfo.getSupplier().getPhone());            
-//            parameters.put("supplierEmail", purchaseInfo.getSupplier().getEmail());
-//            
-//            parameters.put("purchaseDate", purchaseInfo.getPurchaseDate().toString());
-//            
-//                        
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-//
-//            
-////	        String tempDir = System.getProperty("java.io.tmpdir");
-////	        JasperExportManager.exportReportToHtmlFile(jasperPrint, tempDir + "report.html");
-////	        JasperExportManager.exportReportToPdfFile(jasperPrint, tempDir + "report.pdf");
-////			
-////	        System.out.println(tempDir);
-//	     // Export the report to a PDF file (or another format)
-//	        return JasperExportManager.exportReportToPdf(jasperPrint);
+           
 	    return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,5 +102,38 @@ public class TestController {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	
+	@Autowired
+    private ExcelServiceImple excelService;
+
+    @GetMapping("/excel")
+    public ResponseEntity<byte[]> exportToExcel() {
+        List<String[]> data = Arrays.asList(
+            new String[]{"Data1", "Data2", "Data3"},
+            new String[]{"Row2Data1", "Row2Data2", "Row2Data3"},
+            new String[]{"Row3Data1", "Row3Data2", "Row3Data3"}
+        );
+
+        try {
+            ByteArrayInputStream excelData = excelService.generateExcel(data);
+            byte[] bytes = excelData.readAllBytes();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+
+            return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+	
+	
+	
+	
+	
 	
 }

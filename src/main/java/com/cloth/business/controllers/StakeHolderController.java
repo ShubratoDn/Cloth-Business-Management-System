@@ -58,4 +58,11 @@ public class StakeHolderController {
         List<StakeHolder> stakeHolders = stakeHolderService.getStakeHoldersByTypeAndStore(type, storeId);
         return ResponseEntity.ok(stakeHolders);
     }
+    
+    
+    @GetMapping("/store/{storeId}")
+    public ResponseEntity<?> getStakeHolderByStore(@PathVariable Long storeId) {
+        List<StakeHolder> stakeHolders = stakeHolderService.getStakeHoldersByStore(storeId);
+        return ResponseEntity.ok(stakeHolders);
+    }
 }

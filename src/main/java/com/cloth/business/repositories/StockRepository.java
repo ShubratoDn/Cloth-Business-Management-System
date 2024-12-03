@@ -38,33 +38,35 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 										  Pageable pageable);
 
 
-//	@Query("SELECT new com.cloth.business.payloads.StockOverview(s.product, SUM(s.quantity), s.store) " +
-//	       "FROM Stock s " +
-//	       "WHERE (:storeId IS NULL OR s.store.id = :storeId) " +
-//	       "AND (:productId IS NULL OR s.product.id = :productId) " +
-//	       "AND (:productName IS NULL OR LOWER(s.product.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
-//	       "GROUP BY s.product, s.store")
+//	@Query("SELECT new com.cloth.business.payloads.StockOverview(s.product, " +
+//			"SUM(CASE WHEN s.transactionType = 'PURCHASE' THEN s.quantity " +
+//			"WHEN s.transactionType = 'SALE' THEN -s.quantity ELSE 0 END), " +
+//			"s.store) so  " +
+//			"FROM Stock s " +
+//			"WHERE (:storeId IS NULL OR s.store.id = :storeId) " +
+//			"AND (:productId IS NULL OR s.product.id = :productId) " +
+//			"AND (:productName IS NULL OR LOWER(s.product.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
+//			"GROUP BY s.product, s.store")
 //	Page<StockOverview> findStockOverview(@Param("storeId") Long storeId,
-//	                                      @Param("productId") Long productId,  // New parameter
-//	                                      @Param("productName") String productName,
-//	                                      Pageable pageable);
-
-
+//										  @Param("productId") Long productId,
+//										  @Param("productName") String productName,
+//										  Pageable pageable);
 
 	@Query("SELECT new com.cloth.business.payloads.StockOverview(s.product, " +
-			"SUM(CASE WHEN s.transactionType = 'PURCHASE' THEN s.quantity " +
-			"WHEN s.transactionType = 'SALE' THEN -s.quantity ELSE 0 END), " +
-			"s.store) " +
-			"FROM Stock s " +
-			"WHERE (:storeId IS NULL OR s.store.id = :storeId) " +
-			"AND (:productId IS NULL OR s.product.id = :productId) " +
-			"AND (:productName IS NULL OR LOWER(s.product.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
-			"GROUP BY s.product, s.store")
-	Page<StockOverview> findStockOverview(@Param("storeId") Long storeId,
-										  @Param("productId") Long productId,
-										  @Param("productName") String productName,
-										  Pageable pageable);
-
+            "SUM(CASE WHEN s.transactionType = 'PURCHASE' THEN s.quantity " +
+            "WHEN s.transactionType = 'SALE' THEN -s.quantity ELSE 0 END), " +
+            "s.store) " +
+            "FROM Stock s " +
+            "WHERE (:storeId IS NULL OR s.store.id = :storeId) " +
+            "AND (:productId IS NULL OR s.product.id = :productId) " +
+            "AND (:productName IS NULL OR LOWER(s.product.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
+            "GROUP BY s.product, s.store " +
+            "ORDER BY SUM(CASE WHEN s.transactionType = 'PURCHASE' THEN s.quantity " + // Order by totalQuantity
+            "WHEN s.transactionType = 'SALE' THEN -s.quantity ELSE 0 END) DESC") // Order by totalQuantity
+Page<StockOverview> findStockOverview(@Param("storeId") Long storeId,
+                                      @Param("productId") Long productId,
+                                      @Param("productName") String productName,
+                                      Pageable pageable);
 
 
 

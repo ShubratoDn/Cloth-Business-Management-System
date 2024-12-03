@@ -36,6 +36,25 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	            Pageable pageable
 	    );
 	
+	@Query("SELECT tt FROM TradeTransaction tt WHERE " +
+	           "(:storeId IS NULL OR tt.store.id = :storeId) AND " +
+	           "(:supplierId IS NULL OR tt.partner.id = :supplierId) AND " +
+	           "(:transactionNumber IS NULL OR tt.transactionNumber LIKE %:transactionNumber%) AND " +
+	           "(:purchaseStatus IS NULL OR tt.transactionStatus = :purchaseStatus) AND " +
+	           "(:fromDate IS NULL OR tt.transactionDate >= :fromDate) AND " +
+	           "(:toDate IS NULL OR tt.transactionDate <= :toDate) AND " +
+				"(:transactionType IS NULL OR tt.transactionType = :transactionType) " )
+	Page<TradeTransaction> searchTransaction(
+	            @Param("storeId") Long storeId,
+	            @Param("supplierId") Long supplierId,
+	            @Param("transactionNumber") String transactionNumber,
+	            @Param("purchaseStatus") TransactionStatus purchaseStatus,
+	            @Param("fromDate") Date fromDate,
+	            @Param("toDate") Date toDate,
+	            @Param("transactionType") TransactionType transactionType,
+	            Pageable pageable
+	    );
+	
 	
 	TradeTransaction findByIdAndTransactionNumber(Long id, String po);
 	
