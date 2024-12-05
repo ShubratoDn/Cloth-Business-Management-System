@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -20,15 +22,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloth.business.configurations.annotations.CheckRoles;
 import com.cloth.business.configurations.constants.Constants;
 import com.cloth.business.entities.TradeTransaction;
+import com.cloth.business.entities.enums.TransactionStatus;
+import com.cloth.business.entities.enums.TransactionType;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.services.PurchaseServices;
-import com.cloth.business.services.ReportServices;
-import com.cloth.business.servicesImple.ExcelServiceImple;
+import com.cloth.business.services.ReportPDFServices;
+import com.cloth.business.servicesImple.ReportExcelServiceImple;
 
 import jakarta.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -48,7 +55,7 @@ public class TestController {
 	private PurchaseServices purchaseServices;
 	
 	@Autowired
-	private ReportServices reportServices;
+	private ReportPDFServices reportServices;
 	
 	@GetMapping("/generate-pdf/{id}/{po}")
 	public ResponseEntity<?> getPurchaseReport(@PathVariable Long id, @PathVariable String po, HttpServletRequest req) throws Exception {
@@ -108,7 +115,7 @@ public class TestController {
 	
 	
 	@Autowired
-    private ExcelServiceImple excelService;
+    private ReportExcelServiceImple excelService;
 
     @GetMapping("/excel")
     public ResponseEntity<byte[]> exportToExcel() {
@@ -118,22 +125,40 @@ public class TestController {
             new String[]{"Row3Data1", "Row3Data2", "Row3Data3"}
         );
 
-        try {
-            ByteArrayInputStream excelData = excelService.generateExcel(data);
-            byte[] bytes = excelData.readAllBytes();
+        ByteArrayInputStream excelData = excelService.generateExcel(data);
+		byte[] bytes = excelData.readAllBytes();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attachment; filename=data.xlsx");
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attachment; filename=data.xlsx");
 
-            return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
     }
-	
-	
-	
-	
+    
+    
+    
+    
+    
+//    @CheckRoles({"ROLE_ADMIN", "ROLE_REPORT_PROFITABILITY"})
+    @GetMapping("/profitability")
+    public ResponseEntity<?> downloadReport(
+            @RequestParam(value = "storeId", required = false) Long storeId,
+            @RequestParam(value = "supplierId", required = false) Long supplierId,
+            @RequestParam(value = "poNumber", required = false) String poNumber,
+            @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fromDate,
+            @RequestParam(value = "transactionStatus", required = false) TransactionStatus transactionStatus,
+            @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate,
+            @RequestParam(value = "transactionType", required = false) TransactionType transactionType) {
+
+
+    	ByteArrayInputStream reportStream = excelService.downloadProfitabilityReport(storeId, supplierId, poNumber, transactionStatus, fromDate, toDate, transactionType);
+    	
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=profitability_report.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(reportStream.readAllBytes());
+    }
 	
 	
 }

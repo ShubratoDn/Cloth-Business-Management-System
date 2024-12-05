@@ -1,6 +1,7 @@
 package com.cloth.business.repositories;
 
 import java.util.Date;
+import java.util.List;
 
 import com.cloth.business.entities.enums.TransactionType;
 import org.springframework.data.domain.Page;
@@ -40,7 +41,7 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	           "(:storeId IS NULL OR tt.store.id = :storeId) AND " +
 	           "(:supplierId IS NULL OR tt.partner.id = :supplierId) AND " +
 	           "(:transactionNumber IS NULL OR tt.transactionNumber LIKE %:transactionNumber%) AND " +
-	           "(:purchaseStatus IS NULL OR tt.transactionStatus = :purchaseStatus) AND " +
+	           "(:transactionStatus IS NULL OR tt.transactionStatus = :transactionStatus) AND " +
 	           "(:fromDate IS NULL OR tt.transactionDate >= :fromDate) AND " +
 	           "(:toDate IS NULL OR tt.transactionDate <= :toDate) AND " +
 				"(:transactionType IS NULL OR tt.transactionType = :transactionType) " )
@@ -48,11 +49,30 @@ public interface TransactionRepository extends JpaRepository<TradeTransaction, L
 	            @Param("storeId") Long storeId,
 	            @Param("supplierId") Long supplierId,
 	            @Param("transactionNumber") String transactionNumber,
-	            @Param("purchaseStatus") TransactionStatus purchaseStatus,
+	            @Param("transactionStatus") TransactionStatus transactionStatus,
 	            @Param("fromDate") Date fromDate,
 	            @Param("toDate") Date toDate,
 	            @Param("transactionType") TransactionType transactionType,
 	            Pageable pageable
+	    );
+	
+	
+	@Query("SELECT tt FROM TradeTransaction tt WHERE " +
+	           "(:storeId IS NULL OR tt.store.id = :storeId) AND " +
+	           "(:supplierId IS NULL OR tt.partner.id = :supplierId) AND " +
+	           "(:transactionNumber IS NULL OR tt.transactionNumber LIKE %:transactionNumber%) AND " +
+	           "(:transactionStatus IS NULL OR tt.transactionStatus = :transactionStatus) AND " +
+	           "(:fromDate IS NULL OR tt.transactionDate >= :fromDate) AND " +
+	           "(:toDate IS NULL OR tt.transactionDate <= :toDate) AND " +
+				"(:transactionType IS NULL OR tt.transactionType = :transactionType) " )
+	List<TradeTransaction> searchTransaction(
+	            @Param("storeId") Long storeId,
+	            @Param("supplierId") Long supplierId,
+	            @Param("transactionNumber") String transactionNumber,
+	            @Param("transactionStatus") TransactionStatus transactionStatus,
+	            @Param("fromDate") Date fromDate,
+	            @Param("toDate") Date toDate,
+	            @Param("transactionType") TransactionType transactionType
 	    );
 	
 	

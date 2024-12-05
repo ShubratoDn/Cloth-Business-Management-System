@@ -1,6 +1,7 @@
 package com.cloth.business.servicesImple;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,10 +18,8 @@ import com.cloth.business.payloads.PageResponse;
 import com.cloth.business.repositories.TransactionRepository;
 import com.cloth.business.services.TransactionService;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 public class TransactionServicesImple implements TransactionService {
 
     @Autowired
@@ -30,7 +29,7 @@ public class TransactionServicesImple implements TransactionService {
 
    
     @Override
-    public PageResponse searchTransaction(Long storeId, Long supplierId, String transactioNumber, TransactionStatus purchaseStatus, Date fromDate, Date toDate, TransactionType transactionType, int page, int size, String sortBy, String sortDirection) {
+    public PageResponse searchTransaction(Long storeId, Long supplierId, String transactioNumber, TransactionStatus transactionStatus, Date fromDate, Date toDate, TransactionType transactionType, int page, int size, String sortBy, String sortDirection) {
 
         Sort sort = null;
         if (sortDirection.equalsIgnoreCase("asc")) {
@@ -42,7 +41,14 @@ public class TransactionServicesImple implements TransactionService {
         Page<TradeTransaction> pageInfo;
 
         Pageable pageable = PageRequest.of(page, size, sort);
-        pageInfo = transactionRepository.searchTransaction(storeId, supplierId,transactioNumber, purchaseStatus, fromDate, toDate, transactionType, pageable);
+        pageInfo = transactionRepository.searchTransaction(storeId, supplierId,transactioNumber, transactionStatus, fromDate, toDate, transactionType, pageable);
         return HelperUtils.pageToPageResponse(pageInfo);
+    }
+    
+    
+    @Override
+    public List<TradeTransaction> searchTransaction(Long storeId, Long supplierId, String transactioNumber,
+    		TransactionStatus purchaseStatus, Date fromDate, Date toDate, TransactionType transactionType) {
+    	return transactionRepository.searchTransaction(storeId, supplierId, transactioNumber, purchaseStatus, fromDate, toDate, transactionType);
     }
 }

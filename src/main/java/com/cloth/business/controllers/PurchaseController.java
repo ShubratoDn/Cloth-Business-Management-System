@@ -18,7 +18,7 @@ import com.cloth.business.entities.enums.TransactionStatus;
 import com.cloth.business.exceptions.ResourceNotFoundException;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.services.PurchaseServices;
-import com.cloth.business.services.ReportServices;
+import com.cloth.business.services.ReportPDFServices;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class PurchaseController {
 	private PurchaseServices purchaseServices;
 
 	@Autowired
-	private ReportServices reportServices; 
+	private ReportPDFServices reportServices; 
 	
 	@CheckRoles({"ROLE_ADMIN", "ROLE_PURCHASE_CREATE"})
 	@PostMapping

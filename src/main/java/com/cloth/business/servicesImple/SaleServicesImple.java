@@ -457,6 +457,20 @@ public class SaleServicesImple implements SaleService {
 
             //UPDATING STOCK
             stockService.updateStock(sale);
+            
+            
+            Double productPriceTotal = 0.00;
+			for (TradeTransactionDetails purchaseDetail : sale.getTransactionDetails()) {
+				Double total = purchaseDetail.getQuantity() * purchaseDetail.getPrice();
+				productPriceTotal = productPriceTotal + (total);		
+			}
+
+			Double grandTotal = productPriceTotal;
+			grandTotal = sale.getDiscountAmount() == null ? grandTotal : grandTotal - sale.getDiscountAmount();
+			grandTotal = sale.getChargeAmount() == null ? grandTotal : grandTotal + sale.getChargeAmount();
+
+			sale.setTotalAmount(grandTotal);	
+            
         } else if (status.equals(TransactionStatus.REJECTED)) {
             sale.setRejectedBy(HelperUtils.getLoggedinUser());
             sale.setRejectedDate(new Date());

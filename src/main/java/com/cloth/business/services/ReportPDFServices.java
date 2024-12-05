@@ -2,7 +2,7 @@ package com.cloth.business.services;
 
 import com.cloth.business.entities.TradeTransaction;
 
-public interface ReportServices {
+public interface ReportPDFServices {
 	
 	public byte[] generatePODetails(TradeTransaction purchase);
 

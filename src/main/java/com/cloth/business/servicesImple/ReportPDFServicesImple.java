@@ -16,7 +16,7 @@ import com.cloth.business.entities.TradeTransactionDetails;
 import com.cloth.business.entities.enums.TransactionStatus;
 import com.cloth.business.helpers.HelperUtils;
 import com.cloth.business.payloads.ReportProductDetails;
-import com.cloth.business.services.ReportServices;
+import com.cloth.business.services.ReportPDFServices;
 
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -27,7 +27,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
-public class ReportServicesImple implements ReportServices{
+public class ReportPDFServicesImple implements ReportPDFServices{
 
 	@Override
 	public byte[] generatePODetails(TradeTransaction purchaseInfo) {	

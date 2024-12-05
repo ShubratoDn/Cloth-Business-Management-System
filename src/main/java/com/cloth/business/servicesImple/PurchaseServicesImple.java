@@ -250,16 +250,7 @@ public class PurchaseServicesImple implements PurchaseServices {
 		return transactionRepository.save(dbPurchase);
 	}
 	
-	
-	
-	
-	//generate PO number
-//	public String generatePOnumber(Store store) {
-//		long countPurchasesByStore = transactionRepository.countPurchasesByStore(store.getId());
-//
-//		String poNumber = "PO"+store.getId()+"S"+(countPurchasesByStore+1);
-//		return poNumber;
-//	}
+
 
 	public String generatePOnumber(Store store) {
 		Long storeId = store.getId();
@@ -326,6 +317,22 @@ public class PurchaseServicesImple implements PurchaseServices {
 
 			//UPDATING STOCK
 			stockService.updateStock(purchase);
+			
+			
+			
+			
+			Double productPriceTotal = 0.00;
+			for (TradeTransactionDetails purchaseDetail : purchase.getTransactionDetails()) {
+				Double total = purchaseDetail.getQuantity() * purchaseDetail.getPrice();
+				productPriceTotal = productPriceTotal + (total);		
+			}
+
+			Double grandTotal = productPriceTotal;
+			grandTotal = purchase.getDiscountAmount() == null ? grandTotal : grandTotal - purchase.getDiscountAmount();
+			grandTotal = purchase.getChargeAmount() == null ? grandTotal : grandTotal + purchase.getChargeAmount();
+
+			purchase.setTotalAmount(grandTotal);	
+			
 		}else if(status.equals(TransactionStatus.REJECTED)){
 			purchase.setRejectedBy(HelperUtils.getLoggedinUser());
 			purchase.setRejectedDate(new Date());
