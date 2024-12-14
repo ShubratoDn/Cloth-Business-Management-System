@@ -36,7 +36,7 @@ public class ReportController {
             @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date toDate,
             @RequestParam(value = "transactionType", required = false) TransactionType transactionType) {
 
-
+		
     	ByteArrayInputStream reportStream = reportExcelService.downloadProfitabilityReport(storeId, supplierId, poNumber, transactionStatus, fromDate, toDate, transactionType);
     	
     	HttpHeaders headers = new HttpHeaders();
